@@ -1,0 +1,7 @@
+{
+  "apiBaseUrl": "https://api.example.com",
+  "env": "staging",
+  "featureFlags": {
+    "enableNewDashboard": false
+  }
+}

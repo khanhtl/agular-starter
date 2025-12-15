@@ -1,0 +1,7 @@
+{
+  "apiBaseUrl": "https://dev.api.example.com",
+  "env": "development",
+  "featureFlags": {
+    "enableNewDashboard": true
+  }
+}

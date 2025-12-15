@@ -1,0 +1,29 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "moduleResolution": "bundler",
+    "emitDecoratorMetadata": false,
+    "target": "es2022",
+    "module": "preserve",
+    "lib": [
+      "es2020",
+      "dom"
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@angular-starter/core/auth": [
+        "libs/core/auth/src/index.ts"
+      ],
+      "@angular-starter/core/http": [
+        "libs/core/http/src/index.ts"
+      ],
+      "@angular-starter/core/config": [
+        "libs/core/config/src/index.ts"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
+}

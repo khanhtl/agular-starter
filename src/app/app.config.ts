@@ -1,15 +1,29 @@
-import {
-  ApplicationConfig,
-  provideBrowserGlobalErrorListeners,
-  provideZonelessChangeDetection
-} from '@angular/core';
+import { loadAppConfig, provideAppConfig } from '@angular-starter/core/config';
+import { authInterceptor, errorInterceptor } from '@angular-starter/core/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideZonelessChangeDetection } from '@angular/core';
+import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
+import { App } from './app';
 import { appRoutes } from './app.routes';
 
-export const appConfig: ApplicationConfig = {
-  providers: [
-    provideBrowserGlobalErrorListeners(),
-    provideZonelessChangeDetection(),
-    provideRouter(appRoutes),
-  ],
-};
+export async function bootstrap() {
+  const config = await loadAppConfig();
+
+  await bootstrapApplication(App, {
+    providers: [
+      provideAppConfig(config),
+
+      provideHttpClient(
+        withInterceptors([
+          authInterceptor,
+          errorInterceptor,
+        ])
+      ),
+
+      provideRouter(appRoutes),
+
+      provideZonelessChangeDetection(),
+    ],
+  });
+}
