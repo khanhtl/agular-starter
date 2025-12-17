@@ -19,6 +19,12 @@
       ],
       "@angular-starter/core/config": [
         "libs/core/config/src/index.ts"
+      ],
+      "@angular-starter/ui/popup": [
+        "libs/ui/popup/src/index.ts"
+      ],
+      "@angular-starter/feature/candidate": [
+        "libs/feature/candidate/src/index.ts"
       ]
     }
   },
