@@ -1,3 +1,4 @@
+import { registerConfirmPopup } from '@angular-starter/ui/dialogs';
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
@@ -9,4 +10,8 @@ import { RouterModule } from '@angular/router';
 })
 export class App {
   protected title = 'angular-starter';
+
+  constructor() {
+    registerConfirmPopup();
+  }
 }

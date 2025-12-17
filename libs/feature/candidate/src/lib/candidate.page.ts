@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 
+import { SharedPopupMap } from '@angular-starter/ui/dialogs';
 import { PopupService } from '@angular-starter/ui/popup';
 import { Candidate } from './candidate.types';
 import { CandidatePopupMap } from './popups/candidate.popup';
-
 
 @Component({
     standalone: true,
@@ -13,6 +13,7 @@ import { CandidatePopupMap } from './popups/candidate.popup';
     template: `
     <h1>Candidates</h1>
     <button (click)="add()">Add Candidate</button>
+    <button (click)="confirm()">Confirm</button>
     <ul>
       @for (candidate of candidates(); track candidate.id) {
         <li>
@@ -28,6 +29,8 @@ import { CandidatePopupMap } from './popups/candidate.popup';
 export class CandidatePage {
     private popup =
         inject(PopupService<CandidatePopupMap>);
+    private confirmPopup =
+        inject(PopupService<SharedPopupMap>);
 
     candidates = signal<Candidate[]>([
         { id: 1, name: 'Alice' },
@@ -86,5 +89,23 @@ export class CandidatePage {
 
     reload() {
         console.log('Reload candidates');
+    }
+
+    async confirm() {
+        const result = await this.confirmPopup.openAndWait(
+            'ui.confirm',
+            {
+                data: {
+                    title: 'Confirm',
+                    message: 'Are you sure?',
+                },
+                hooks: {
+                    onOpen: () =>
+                        console.log('🟢 Confirm popup opened'),
+                    onClose: result =>
+                        console.log('🔴 Confirm popup closed', result),
+                },
+            }
+        );
     }
 }

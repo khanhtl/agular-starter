@@ -1,101 +1,343 @@
-# AngularStarter
+# Angular Starter
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+<div align="center">
+  <a href="https://nx.dev" target="_blank" rel="noreferrer">
+    <img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="60" alt="Nx logo">
+  </a>
+  
+  <h3>🚀 A modern Angular workspace powered by Nx</h3>
+  
+  <p>
+    <a href="#getting-started">Getting Started</a> •
+    <a href="#development">Development</a> •
+    <a href="#project-structure">Project Structure</a> •
+    <a href="#useful-commands">Useful Commands</a>
+  </p>
+</div>
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
+---
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/tutorials/angular-standalone-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+## 📋 Table of Contents
 
-## Run tasks
+- [About](#about)
+- [Getting Started](#getting-started)
+- [Development](#development)
+- [Project Structure](#project-structure)
+- [Useful Commands](#useful-commands)
+- [Adding New Projects](#adding-new-projects)
+- [CI/CD Integration](#cicd-integration)
+- [Tools & Extensions](#tools--extensions)
+- [Resources](#resources)
 
-To run the dev server for your app, use:
+---
 
-```sh
+## 📖 About
+
+This is an Angular application workspace managed by [Nx](https://nx.dev), a powerful build system for monorepo development. Nx provides:
+
+- ⚡ Fast build and test execution with computation caching
+- 🔧 Advanced code generation and scaffolding
+- 📊 Visual workspace dependency graphs
+- 🎯 Smart, affected-based task execution
+- 🔌 Rich plugin ecosystem
+
+[Learn more about this workspace setup](https://nx.dev/getting-started/tutorials/angular-standalone-tutorial?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- **Node.js** (v18.x or higher recommended)
+- **npm** or **yarn** or **pnpm**
+- **Git**
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd angular-starter
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   # or
+   yarn install
+   # or
+   pnpm install
+   ```
+
+3. **Start the development server**
+   ```bash
+   npx nx serve angular-starter
+   ```
+
+4. **Open your browser**
+   
+   Navigate to `http://localhost:4200`
+
+---
+
+## 💻 Development
+
+### Running the Development Server
+
+To start the development server with hot-reload:
+
+```bash
 npx nx serve angular-starter
 ```
 
-To create a production bundle:
+The application will be available at `http://localhost:4200`. The dev server will automatically reload when you make changes to source files.
 
-```sh
+### Building for Production
+
+To create an optimized production build:
+
+```bash
 npx nx build angular-starter
 ```
 
-To see all available targets to run for a project, run:
+The build artifacts will be stored in the `dist/` directory.
 
-```sh
+### Running Tests
+
+#### Unit Tests
+
+```bash
+npx nx test angular-starter
+```
+
+#### E2E Tests
+
+```bash
+npx nx e2e angular-starter-e2e
+```
+
+### Linting
+
+To lint your code:
+
+```bash
+npx nx lint angular-starter
+```
+
+To fix auto-fixable linting issues:
+
+```bash
+npx nx lint angular-starter --fix
+```
+
+---
+
+## 📁 Project Structure
+
+```
+angular-starter/
+├── apps/
+│   └── angular-starter/           # Main Angular application
+│       ├── src/
+│       │   ├── app/               # Application components and modules
+│       │   ├── assets/            # Static assets
+│       │   ├── environments/      # Environment configurations
+│       │   └── main.ts            # Application entry point
+│       └── project.json           # Project configuration
+├── libs/                          # Shared libraries (if any)
+├── tools/                         # Custom build tools and scripts
+├── nx.json                        # Nx workspace configuration
+├── package.json                   # Dependencies and scripts
+├── tsconfig.base.json             # Base TypeScript configuration
+└── README.md                      # This file
+```
+
+---
+
+## 🛠️ Useful Commands
+
+### Project Information
+
+View all available targets for the project:
+
+```bash
 npx nx show project angular-starter
 ```
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+Visualize the workspace dependency graph:
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Add new projects
-
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
-
-Use the plugin's generator to create new projects.
-
-To generate a new application, use:
-
-```sh
-npx nx g @nx/angular:app demo
+```bash
+npx nx graph
 ```
 
-To generate a new library, use:
+### Code Generation
 
-```sh
-npx nx g @nx/angular:lib mylib
+Generate a new component:
+
+```bash
+npx nx g @nx/angular:component <component-name> --project=angular-starter
 ```
 
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
+Generate a new service:
 
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+```bash
+npx nx g @nx/angular:service <service-name> --project=angular-starter
+```
 
-## Set up CI!
+Generate a new module:
 
-### Step 1
+```bash
+npx nx g @nx/angular:module <module-name> --project=angular-starter
+```
 
-To connect to Nx Cloud, run the following command:
+### List Available Generators
 
-```sh
+```bash
+npx nx list @nx/angular
+```
+
+---
+
+## ➕ Adding New Projects
+
+Nx makes it easy to add new applications and libraries to your workspace.
+
+### Generate a New Application
+
+```bash
+npx nx g @nx/angular:app <app-name>
+```
+
+### Generate a New Library
+
+```bash
+npx nx g @nx/angular:lib <lib-name>
+```
+
+### Browse Available Plugins
+
+```bash
+npx nx list
+```
+
+To see capabilities of a specific plugin:
+
+```bash
+npx nx list <plugin-name>
+```
+
+**Pro Tip:** Install [Nx Console](#nx-console) to browse plugins and generators directly in your IDE!
+
+📚 [Learn more about Nx plugins](https://nx.dev/concepts/nx-plugins) | [Browse the plugin registry](https://nx.dev/plugin-registry)
+
+---
+
+## 🔄 CI/CD Integration
+
+### Connect to Nx Cloud
+
+Nx Cloud provides distributed caching and task execution for faster CI/CD pipelines.
+
+**Step 1:** Connect your workspace to Nx Cloud
+
+```bash
 npx nx connect
 ```
 
-Connecting to Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
+**Features included:**
+- 🚀 Remote caching for faster builds
+- 📦 Task distribution across multiple machines
+- 🧪 Automated e2e test splitting
+- 🔄 Task flakiness detection and re-running
 
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+**Step 2:** Generate a CI workflow
 
-### Step 2
-
-Use the following command to configure a CI workflow for your workspace:
-
-```sh
+```bash
 npx nx g ci-workflow
 ```
 
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+This will create a CI configuration file for your preferred CI provider (GitHub Actions, CircleCI, Azure DevOps, etc.).
 
-## Install Nx Console
+📖 [Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx)
 
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
+---
 
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+## 🔌 Tools & Extensions
 
-## Useful links
+### Nx Console
 
-Learn more:
+Nx Console is an IDE extension that enhances your development experience with:
 
-- [Learn more about this workspace setup](https://nx.dev/getting-started/tutorials/angular-standalone-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+- 🎯 Visual task runner
+- 🔨 Code generation UI
+- 📝 Auto-completion improvements
+- 📊 Dependency graph visualization
 
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+**Available for:**
+- [Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=nrwl.angular-console)
+- [IntelliJ IDEA / WebStorm](https://plugins.jetbrains.com/plugin/15101-nx-console)
+
+[Install Nx Console →](https://nx.dev/getting-started/editor-setup)
+
+### Recommended VS Code Extensions
+
+- **Angular Language Service** - Enhanced Angular template support
+- **ESLint** - Code quality and style checking
+- **Prettier** - Code formatting
+- **GitLens** - Enhanced Git capabilities
+
+---
+
+## 📚 Resources
+
+### Documentation
+
+- [Angular Documentation](https://angular.dev)
+- [Nx Documentation](https://nx.dev)
+- [Angular Tutorial with Nx](https://nx.dev/getting-started/tutorials/angular-standalone-tutorial)
+- [Nx on CI/CD](https://nx.dev/ci/intro/ci-with-nx)
+- [Managing Releases with Nx](https://nx.dev/features/manage-releases)
+
+### Community
+
+- 💬 [Discord Community](https://go.nx.dev/community)
+- 🐦 [Twitter/X](https://twitter.com/nxdevtools)
+- 💼 [LinkedIn](https://www.linkedin.com/company/nrwl)
+- 📺 [YouTube Channel](https://www.youtube.com/@nxdevtools)
+- 📝 [Nx Blog](https://nx.dev/blog)
+
+### Angular Resources
+
+- [Angular Official Site](https://angular.dev)
+- [Angular GitHub](https://github.com/angular/angular)
+- [Angular Blog](https://blog.angular.dev)
+- [Angular Style Guide](https://angular.dev/style-guide)
+
+---
+
+## 📝 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+---
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome!
+
+1. Fork the project
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---
+
+<div align="center">
+  <p>Built with ❤️ using Angular and Nx</p>
+  <p>
+    <a href="https://angular.dev">Angular</a> •
+    <a href="https://nx.dev">Nx</a>
+  </p>
+</div>

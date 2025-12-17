@@ -25,6 +25,9 @@
       ],
       "@angular-starter/feature/candidate": [
         "libs/feature/candidate/src/index.ts"
+      ],
+      "@angular-starter/ui/dialogs": [
+        "libs/ui/dialogs/src/index.ts"
       ]
     }
   },
