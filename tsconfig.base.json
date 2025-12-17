@@ -28,6 +28,9 @@
       ],
       "@angular-starter/ui/dialogs": [
         "libs/ui/dialogs/src/index.ts"
+      ],
+      "@angular-starter/core/i18n": [
+        "libs/core/i18n/src/index.ts"
       ]
     }
   },

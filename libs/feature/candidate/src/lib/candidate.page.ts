@@ -3,15 +3,16 @@ import { Component, inject, signal } from '@angular/core';
 
 import { SharedPopupMap } from '@angular-starter/ui/dialogs';
 import { PopupService } from '@angular-starter/ui/popup';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { Candidate } from './candidate.types';
 import { CandidatePopupMap } from './popups/candidate.popup';
 
 @Component({
     standalone: true,
     selector: 'feature-candidate-page',
-    imports: [CommonModule],
+    imports: [CommonModule, TranslocoPipe],
     template: `
-    <h1>Candidates</h1>
+    <h1>{{ 'candidate' | transloco }}</h1>
     <button (click)="add()">Add Candidate</button>
     <button (click)="confirm()">Confirm</button>
     <ul>

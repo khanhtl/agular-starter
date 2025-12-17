@@ -1,5 +1,6 @@
 import { loadAppConfig, provideAppConfig } from '@angular-starter/core/config';
 import { authInterceptor, errorInterceptor } from '@angular-starter/core/http';
+import { provideI18n } from '@angular-starter/core/i18n';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
@@ -22,7 +23,7 @@ export async function bootstrap() {
       ),
 
       provideRouter(appRoutes),
-
+      provideI18n(),
       provideZonelessChangeDetection(),
     ],
   });
