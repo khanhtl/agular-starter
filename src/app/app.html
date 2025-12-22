@@ -1,1 +1,16 @@
 <router-outlet></router-outlet>
+<app-data-grid
+  [data]="data()"
+  [columns]="columns()"
+  height="500px"
+  rowKey="id"
+  rowKey="id"
+>
+  <ng-template cellTemplate="cell-status" let-value="value">
+    <strong>{{ value }}</strong>
+  </ng-template>
+
+  <ng-template cellTemplate="cell-actions">
+    <button>Edit</button>
+  </ng-template>
+</app-data-grid>
