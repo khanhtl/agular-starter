@@ -32,3 +32,10 @@
     --c-text: #e5e7eb;
   }
 }
+.box-shadow-right {
+  box-shadow: 5px 0 15px -5px rgba(0,0,0,0.2);
+}
+
+.box-shadow-left {
+  box-shadow: -5px 0 15px -5px rgba(0,0,0,0.2);
+}

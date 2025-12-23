@@ -9,6 +9,7 @@ A high-performance, feature-rich Data Grid component for Angular applications. B
 - **Responsive Layout**: Sticky headers and pinned columns with synchronized scrolling.
 - **Dynamic Row Heights**: Correctly handles variable row heights (text wrapping/multi-lines) even across pinned sections.
 - **Custom Templates**: Fully customizable cell rendering using directives.
+- **Custom Classes**: Apply custom CSS classes to headers and cells dynamically.
 - **Signals Based**: Uses Angular Signals for reactive state management and OnPush performance.
 
 ## Installation
@@ -32,16 +33,30 @@ export class MyComponent {}
 
 ```typescript
 // component.ts
-columns: ColumnConfig[] = [
-  { key: 'id', title: 'ID', width: '80px', pinned: 'left' },
-  { key: 'name', title: 'Name', width: '200px' },
-  { key: 'role', title: 'Role', width: '150px' },
-  { key: 'actions', title: 'Actions', width: '100px', pinned: 'right' }
+import { ColumnConfig } from '@angular-starter/ui/data-grid';
+
+interface User {
+  id: number;
+  name: string;
+  role: string;
+  status: string;
+}
+
+columns: ColumnConfig<User>[] = [
+  { key: 'id', title: 'ID', width: 80, pinned: 'left' },
+  { key: 'name', title: 'Name', width: 200 },
+  { 
+    key: 'role', 
+    title: 'Role', 
+    width: 150,
+    cellClass: (row) => row.role === 'Admin' ? 'text-bold' : '' 
+  },
+  { key: 'actions', title: 'Actions', width: 100, pinned: 'right' }
 ];
 
-data = [
-  { id: 1, name: 'Alice', role: 'Admin' },
-  { id: 2, name: 'Bob', role: 'User' },
+data: User[] = [
+  { id: 1, name: 'Alice', role: 'Admin', status: 'Active' },
+  { id: 2, name: 'Bob', role: 'User', status: 'Inactive' },
 ];
 ```
 
@@ -66,28 +81,30 @@ data = [
 |----------|------|-------------|
 | `key` | `string` | Unique identifier for data mapping. |
 | `title` | `string` | Display text in header. |
-| `width` | `string` | Width of the column (e.g., '100px'). |
+| `width` | `string \| number` | Width of the column (e.g., '100px' or 100). |
 | `pinned` | `'left' \| 'right'` | (Optional) Pin state. |
 | `align` | `'left' \| 'center' \| 'right'` | Text alignment. |
 | `children` | `ColumnConfig[]` | (Optional) Nested columns for grouped headers. |
 | `pinnable` | `boolean` | (Optional) Allow user to toggle pin state (default: true). |
+| `headerClass`| `string` | (Optional) CSS class to apply to the header cell. |
+| `cellClass` | `string \| (row) => string` | (Optional) CSS class to apply to the body cell. |
 
 ### Custom Cell Templates
 
-Use `*cellSlot` to customize specific cells based on column key or special functionalities.
+Use `*cellTemplate` to customize specific cells based on column key.
 
 ```html
 <app-data-grid [data]="users" [columns]="columns">
   
   <!-- Custom rendering for 'status' column -->
-  <ng-template cellSlot="status" let-value="value">
+  <ng-template cellTemplate="status" let-value="value" let-row="row">
     <span class="badge" [class.active]="value === 'Active'">
       {{ value }}
     </span>
   </ng-template>
 
   <!-- Custom rendering for 'actions' column -->
-  <ng-template cellSlot="actions" let-row="row">
+  <ng-template cellTemplate="actions" let-row="row">
     <button (click)="edit(row)">Edit</button>
   </ng-template>
 
@@ -112,15 +129,11 @@ Simply nest columns in the definition:
 ## Architecture Notes
 
 ### Layout Synchronization
-The grid is rendered as three separate `<table>` elements (Left Pinned, Regular, Right Pinned) inside a flex container to support sticky positioning correctly across all browsers.
+The grid is rendered as three separate `<table>` elements (Left Pinned, Regular, Right Pinned) inside a flex container.
 
-To ensure rows align perfectly even when content wraps:
 - **`DataGridComponent`** observes resizing and data changes.
 - It calculates the maximum natural height of a row across all 3 tables.
-- It explicitly applies this height to all corresponding `<tr>` elements.
+- It explicitly applies this height to all corresponding `<tr>` elements to ensure alignment.
 
 ### State Management
-State (pinned columns, data) is managed internally using `Signals`. When a user pins a column:
-1. `DataGridComponent` updates its internal signal.
-2. `computed` signals recalculate the 3 table structures.
-3. The UI updates efficiently without full re-render.
+State (pinned columns, data) is managed internally using `Signals`.

@@ -8,51 +8,58 @@ import {
 import { ColumnConfig } from './data-grid.types';
 import { PinIconComponent } from './pin-icon';
 
+/**
+ * Component responsible for rendering the table header.
+ * Handles nested headers and column pinning interactions.
+ */
 @Component({
   selector: '[dataGridHeader]',
   standalone: true,
   imports: [PinIconComponent, NgClass],
   template: `
     @for (level of headerLevels(); let levelIndex = $index; track levelIndex) {
-  <tr>
-    @for (column of level; track column.key) {
-      <th
-        class="data-grid-header-cell"
-        [style.width]="column.width"
-        [style.text-align]="column.align || 'left'"
-        [attr.colspan]="column.colSpan || 1"
-        [attr.rowspan]="column.rowSpan || 1"
-        [class.data-grid-header-cell-parent]="column.children?.length"
-        [class.pinned-left]="column.pinned === 'left'"
-        [class.pinned-right]="column.pinned === 'right'">
+      <tr>
+        @for (column of level; track column.key) {
+          <th
+            class="data-grid-header-cell"
+            [class]="column.headerClass || ''"
+            [style.width]="getColumnWidth(column)"
+            [style.text-align]="column.align || 'left'"
+            [attr.colspan]="column.colSpan || 1"
+            [attr.rowspan]="column.rowSpan || 1"
+            [class.data-grid-header-cell-parent]="column.children?.length"
+            [class.pinned-left]="column.pinned === 'left'"
+            [class.pinned-right]="column.pinned === 'right'">
 
-        <div class="header-cell-content" 
-            [ngClass]="['header-cell-content-'+(column.align || 'left')]"
-            [attr.max-depth]="maxHeaderDepth()"
-            [style.height]="column.children?.length || column.parentKey ? '36px': (36 * maxHeaderDepth() + 'px')"
-            [class.header-cell-content-parent]="column.children?.length">
-          <span class="header-title">
-            {{ column.title }}
-          </span>
+            <div class="header-cell-content"
+                [ngClass]="['header-cell-content-'+(column.align || 'left')]"
+                [attr.max-depth]="maxHeaderDepth()"
+                [style.height]="getHeaderHeight(column)"
+                [class.header-cell-content-parent]="column.children?.length">
+              
+              <span class="header-title" [title]="column.title">
+                {{ column.title }}
+              </span>
 
-          @if (column.pinnable) {
-            <app-pin-icon
-              [pinState]="getPinState(column)"
-              [pinnable]="column.pinnable"
-              (pinChange)="handlePinClick(column.key, $event)">
-            </app-pin-icon>
-          }
-        </div>
+              @if (column.pinnable) {
+                <app-pin-icon
+                  [pinState]="getPinState(column)"
+                  [pinnable]="column.pinnable ?? true"
+                  (pinChange)="handlePinClick(column.key, $event)">
+                </app-pin-icon>
+              }
+            </div>
 
-      </th>
+          </th>
+        }
+      </tr>
     }
-  </tr>
-}
-
   `,
   styles: [`
     .data-grid-header-cell {
         padding: 0 !important;
+        background-clip: padding-box; /* Fixes border issues on sticky headers */
+
         &.pinned-right:first-child {
                 border-left: 1px solid var(--c-border);
         }
@@ -64,6 +71,7 @@ import { PinIconComponent } from './pin-icon';
         align-items: center;
         border-right: 1px solid var(--c-border);
         border-bottom: 1px solid var(--c-border);
+        
         &-parent {
             border-bottom: 1px solid var(--c-border);
             display: flex;
@@ -80,12 +88,21 @@ import { PinIconComponent } from './pin-icon';
             justify-content: center;
         }
     }
+    .header-title {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
   `]
 })
 export class DataGridHeaderComponent {
+  /** The columns to render in the header. */
   columns = input<ColumnConfig[]>([]);
+
+  /** The maximum depth of the header hierarchy. Used for calculating row spans. */
   maxHeaderDepth = input<number>(1);
 
+  /** Emits when a column pin state changes. */
   columnPinChange = output<{
     columnKey: string;
     newPinState: 'left' | 'right' | undefined;
@@ -150,6 +167,21 @@ export class DataGridHeaderComponent {
   headerLevels = computed(() =>
     this.buildHeaderLevels(this.columns())
   );
+
+  getColumnWidth(column: ColumnConfig): string {
+    if (typeof column.width === 'number') {
+      return `${column.width}px`;
+    }
+    return column.width || 'auto';
+  }
+
+  getHeaderHeight(column: ColumnConfig): string {
+    if (column.children?.length || column.parentKey) {
+      return '36px';
+    }
+    return (36 * this.maxHeaderDepth()) + 'px';
+  }
+
   getPinState(column: ColumnConfig): 'none' | 'left' | 'right' {
     if (column.pinned === 'left') return 'left';
     if (column.pinned === 'right') return 'right';

@@ -22,6 +22,7 @@ export class App {
     {
       key: 'personal',
       title: 'Personal Information',
+      align: 'center',
       pinnable: true,
       children: [
         { key: 'name', title: 'Name', width: '150px' },
@@ -32,6 +33,7 @@ export class App {
     {
       key: 'work',
       title: 'Work Details',
+      align: 'center',
       pinnable: true,
       children: [
         { key: 'department', title: 'Department', width: '150px' },
@@ -42,6 +44,7 @@ export class App {
     {
       key: 'employment',
       title: 'Employment',
+      align: 'center',
       pinnable: true,
       children: [
         { key: 'startDate', title: 'Start Date', width: '120px' },

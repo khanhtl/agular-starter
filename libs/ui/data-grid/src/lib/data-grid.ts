@@ -1,4 +1,3 @@
-import { NgTemplateOutlet } from '@angular/common';
 import {
   AfterViewInit,
   Component,
@@ -17,225 +16,186 @@ import { CellTemplateDirective } from './data-grid-cell-template';
 import { DataGridHeaderComponent } from './data-grid-header';
 import { ColumnConfig } from './data-grid.types';
 
+/**
+ * A highly customizable, performant Data Grid component for Angular.
+ * Supports column pinning, nested headers, custom templates, and dynamic row heights.
+ *
+ * @example
+ * <app-data-grid
+ *   [data]="users"
+ *   [columns]="columns"
+ *   rowKey="id"
+ *   height="500px">
+ *   <ng-template cellTemplate="status" let-value="value">
+ *     <span class="badge">{{ value }}</span>
+ *   </ng-template>
+ * </app-data-grid>
+ */
 @Component({
   selector: 'app-data-grid',
   standalone: true,
-  imports: [DataGridHeaderComponent, DataGridBodyComponent, CellTemplateDirective, NgTemplateOutlet],
+  imports: [DataGridHeaderComponent, DataGridBodyComponent, CellTemplateDirective],
   template: `
     <div class="data-grid" [style.height]="height()" #dataGrid>
-  <div class="data-grid-container">
-    <div class="data-grid-table-wrapper">
+      <div class="data-grid-container">
+        <div class="data-grid-table-wrapper">
 
-      @if (leftPinnedColumns().length > 0) {
-        <table class="data-grid-table data-grid-table-left">
-          <thead dataGridHeader class="data-grid-header"
-                 [columns]="leftHeaderColumns()"
-                 [maxHeaderDepth]="maxHeaderDepth()"
-                 (columnPinChange)="handleColumnPinChange($event)">
-          </thead>
+          @if (leftPinnedColumns().length > 0) {
+            <table class="data-grid-table data-grid-table-left box-shadow-right">
+              <thead dataGridHeader class="data-grid-header"
+                     [columns]="leftHeaderColumns()"
+                     [maxHeaderDepth]="maxHeaderDepth()"
+                     (columnPinChange)="handleColumnPinChange($event)">
+              </thead>
 
-          <tbody dataGridBody class="data-grid-body"
-                 [data]="data()"
-                 [columns]="leftPinnedColumns()"
-                 [rowKey]="rowKey()"
-                 [cellTemplatesMap]="cellTemplateMap()">
-          </tbody>
-        </table>
-      }
+              <tbody dataGridBody class="data-grid-body box-shadow-right"
+                     [data]="data()"
+                     [columns]="leftPinnedColumns()"
+                     [rowKey]="rowKey()"
+                     [cellTemplatesMap]="cellTemplateMap()">
+              </tbody>
+            </table>
+          }
 
-      @if (regularColumns().length > 0) {
-        <table class="data-grid-table data-grid-table-regular">
-          <thead dataGridHeader class="data-grid-header"
-                 [columns]="regularHeaderColumns()"
-                 [maxHeaderDepth]="maxHeaderDepth()"
-                 (columnPinChange)="handleColumnPinChange($event)">
-          </thead>
+          @if (regularColumns().length > 0) {
+            <table class="data-grid-table data-grid-table-regular">
+              <thead dataGridHeader class="data-grid-header"
+                     [columns]="regularHeaderColumns()"
+                     [maxHeaderDepth]="maxHeaderDepth()"
+                     (columnPinChange)="handleColumnPinChange($event)">
+              </thead>
 
-          <tbody dataGridBody class="data-grid-body"
-                 [data]="data()"
-                 [columns]="regularColumns()"
-                 [rowKey]="rowKey()"
-                 [cellTemplatesMap]="cellTemplateMap()">
-          </tbody>
-        </table>
-      }
+              <tbody dataGridBody class="data-grid-body"
+                     [data]="data()"
+                     [columns]="regularColumns()"
+                     [rowKey]="rowKey()"
+                     [cellTemplatesMap]="cellTemplateMap()">
+              </tbody>
+            </table>
+          }
 
-      @if (rightPinnedColumns().length > 0) {
-        <table class="data-grid-table data-grid-table-right">
-          <thead dataGridHeader class="data-grid-header"
-                 [columns]="rightHeaderColumns()"
-                 [maxHeaderDepth]="maxHeaderDepth()"
-                 (columnPinChange)="handleColumnPinChange($event)">
-          </thead>
+          @if (rightPinnedColumns().length > 0) {
+            <table class="data-grid-table data-grid-table-right  box-shadow-left">
+              <thead dataGridHeader class="data-grid-header"
+                     [columns]="rightHeaderColumns()"
+                     [maxHeaderDepth]="maxHeaderDepth()"
+                     (columnPinChange)="handleColumnPinChange($event)">
+              </thead>
 
-          <tbody dataGridBody class="data-grid-body"
-                 [data]="data()"
-                 [columns]="rightPinnedColumns()"
-                 [rowKey]="rowKey()"
-                 [cellTemplatesMap]="cellTemplateMap()">
-          </tbody>
-        </table>
-      }
+              <tbody dataGridBody class="data-grid-body box-shadow-left"
+                     [data]="data()"
+                     [columns]="rightPinnedColumns()"
+                     [rowKey]="rowKey()"
+                     [cellTemplatesMap]="cellTemplateMap()">
+              </tbody>
+            </table>
+          }
 
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-
   `,
   styles: [`
     .data-grid {
-  width: 100%;
-  border: 1px solid var(--c-border);
-  border-radius: var(--w-radius);
-  overflow: hidden;
-  background-color: var(--c-white);
-
-  .data-grid-container {
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    position: relative;
-  }
-
-  .data-grid-table-wrapper {
-    position: relative;
-    width: 100%;
-    min-width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-  }
-
-  .data-grid-table {
-    border-collapse: separate;
-    border-spacing: 0;
-    table-layout: fixed;
-
-    thead {
-      // display: table; // Removed to restore natural table alignment
-      // width: 100%;    // Removed
-      // table-layout: fixed; // Removed
-    }
-
-    tbody {
-      // display: block; // Removed to restore natural table alignment
-      
-      tr {
-        // display: table; // Removed
-        // width: 100%;    // Removed
-        // table-layout: fixed; // Removed
-      }
-    }
-
-    &.data-grid-table-left {
-      position: sticky;
-      left: 0;
-      z-index: 15;
-      background-color: var(--c-white);
-    }
-
-    &.data-grid-table-regular {
-      flex: 1;
-    }
-
-    &.data-grid-table-right {
-      position: sticky;
-      right: 0;
-      z-index: 15;
-      background-color: var(--c-white);
-    }
-  }
-}
-
-.dark .data-grid {
-  background-color: var(--c-bg);
-
-  .data-grid-table-left,
-  .data-grid-table-right {
-    background-color: var(--c-bg);
-  }
-}
-.data-grid-header {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background-color: var(--c-bg);
-
-  .data-grid-header-cell {
-    padding: calc(var(--w-space-sm) / 2) var(--w-space-sm);
-    font-weight: 600;
-    color: var(--c-text);
-    border-bottom: 2px solid var(--c-border);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    position: relative;
-
-    .header-cell-content {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
       width: 100%;
+      border: 1px solid var(--c-border);
+      border-radius: var(--w-radius);
+      overflow: hidden;
+      background-color: var(--c-white);
 
-      .header-title {
-        flex: 1;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+      .data-grid-container {
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        position: relative;
+      }
+
+      .data-grid-table-wrapper {
+        position: relative;
+        width: 100%;
+        min-width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+      }
+
+      .data-grid-table {
+        border-collapse: separate;
+        border-spacing: 0;
+        table-layout: fixed;
+
+        &.data-grid-table-left {
+          position: sticky;
+          left: 0;
+          z-index: 15;
+          background-color: var(--c-white);
+        }
+
+        &.data-grid-table-regular {
+          flex: 1;
+        }
+
+        &.data-grid-table-right {
+          position: sticky;
+          right: 0;
+          z-index: 15;
+          background-color: var(--c-white);
+        }
       }
     }
 
-    &.pinned-left {
+    .dark .data-grid {
       background-color: var(--c-bg);
-      position: sticky;
-      z-index: 11;
-      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+
+      .data-grid-table-left,
+      .data-grid-table-right {
+        background-color: var(--c-bg);
+      }
     }
 
-    &.pinned-right {
-      background-color: var(--c-bg);
+    .data-grid-header {
       position: sticky;
-      z-index: 11;
-      box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+      top: 0;
+      z-index: 10;
+      background-color: var(--c-bg);
+      /* Ensure header is above body cells especially when scrolled */
     }
-  }
-}
 
-.dark .data-grid-header {
-  background-color: rgba(255, 255, 255, 0.1);
-
-  .data-grid-header-cell {
-    color: var(--c-text);
-    border-bottom-color: var(--c-border);
-
-    &.pinned-left,
-    &.pinned-right {
+    .dark .data-grid-header {
       background-color: rgba(255, 255, 255, 0.1);
     }
-  }
-}
   `]
 })
 export class DataGridComponent implements AfterViewInit, OnDestroy {
   dataGrid = viewChild<ElementRef>('dataGrid');
   private resizeObserver?: ResizeObserver;
 
-  data = input<Record<string, any>[]>([]);
+  /** The data to receive and display in the grid. */
+  data = input<any[]>([]);
+
+  /** Configuration for the columns. */
   columns = input<ColumnConfig[]>([]);
+
+  /** Height of the grid container (CSS string). Default `400px`. */
   height = input<string>('400px');
+
+  /** Unique property name in data to serve as row key (e.g., 'id'). Default `id`. */
   rowKey = input<string>('id');
 
+  /** Optional callback to override internal strict pin handling if needed. */
   onColumnPinChange =
     input<(key: string, state: 'left' | 'right' | undefined) => void>();
 
+  /** Emits when a column is pinned/unpinned. */
   columnPinChange = output<{
     columnKey: string;
     newPinState: 'left' | 'right' | undefined;
   }>();
 
-
+  /** Content children to capture custom cell templates. */
   cellTemplates = contentChildren(CellTemplateDirective);
 
+  /** Map of cell template name -> TemplateRef. */
   cellTemplateMap = computed(() => {
     const map = new Map<string, any>();
     this.cellTemplates().forEach(slot => {
@@ -244,7 +204,7 @@ export class DataGridComponent implements AfterViewInit, OnDestroy {
     return map;
   });
 
-
+  /** Internal copy of columns to handle local state (like pinning). */
   internalColumns = signal<ColumnConfig[]>([]);
 
   constructor() {
@@ -256,6 +216,7 @@ export class DataGridComponent implements AfterViewInit, OnDestroy {
 
     effect(() => {
       // Sync rows when data changes
+      // We read data() to register dependency
       this.data();
       setTimeout(() => this.syncRowHeights(), 0);
     });
@@ -270,6 +231,10 @@ export class DataGridComponent implements AfterViewInit, OnDestroy {
     this.resizeObserver?.disconnect();
   }
 
+  /**
+   * Sets up a ResizeObserver to re-sync row heights when the container size changes.
+   * This is crucial for responsive wrapping text.
+   */
   private setupResizeObserver() {
     const dataGridEl = this.dataGrid()?.nativeElement;
     if (!dataGridEl) return;
@@ -285,13 +250,22 @@ export class DataGridComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  /**
+   * Synchronizes row heights across the 3 tables (Left, Regular, Right).
+   * Finds the maximum height for each row index and applies it to all corresponding TRs.
+   */
   private syncRowHeights() {
     const dataGridEl = this.dataGrid()?.nativeElement;
     if (!dataGridEl) return;
 
-    const leftRows = dataGridEl.querySelectorAll('.data-grid-table-left .data-grid-row');
-    const regularRows = dataGridEl.querySelectorAll('.data-grid-table-regular .data-grid-row');
-    const rightRows = dataGridEl.querySelectorAll('.data-grid-table-right .data-grid-row');
+    // We query both the body rows AND the header rows to ensure alignment everywhere
+    // For now, let's focus on body rows as headers are usually single-line or fixed height
+    // But if we want robust header sync, we might need logic there too.
+    // The current logic handles body rows.
+
+    const leftRows = dataGridEl.querySelectorAll('.data-grid-table-left .data-grid-body .data-grid-row');
+    const regularRows = dataGridEl.querySelectorAll('.data-grid-table-regular .data-grid-body .data-grid-row');
+    const rightRows = dataGridEl.querySelectorAll('.data-grid-table-right .data-grid-body .data-grid-row');
 
     const rowCount = Math.max(leftRows.length, regularRows.length, rightRows.length);
 
@@ -307,7 +281,7 @@ export class DataGridComponent implements AfterViewInit, OnDestroy {
         if (regularRow) regularRow.style.height = '';
         if (rightRow) rightRow.style.height = '';
 
-        // Read heights
+        // Read natural heights
         const heights = [
           leftRow?.offsetHeight || 0,
           regularRow?.offsetHeight || 0,
@@ -325,11 +299,6 @@ export class DataGridComponent implements AfterViewInit, OnDestroy {
       }
     });
   }
-
-
-
-
-
 
   private flattenColumns(cols: ColumnConfig[]): ColumnConfig[] {
     const result: ColumnConfig[] = [];
@@ -395,6 +364,7 @@ export class DataGridComponent implements AfterViewInit, OnDestroy {
   });
 
 
+  /*
   private findColumnByKey(
     columns: ColumnConfig[],
     key: string
@@ -408,6 +378,7 @@ export class DataGridComponent implements AfterViewInit, OnDestroy {
     }
     return null;
   }
+  */
 
   private filterColumnsByPinned(
     columns: ColumnConfig[],
