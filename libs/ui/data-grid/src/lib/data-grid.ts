@@ -48,7 +48,7 @@ import { ColumnConfig } from './data-grid.types';
                      (columnPinChange)="handleColumnPinChange($event)">
               </thead>
 
-              <tbody dataGridBody class="data-grid-body box-shadow-right"
+              <tbody dataGridBody class="data-grid-body"
                      [data]="data()"
                      [columns]="leftPinnedColumns()"
                      [rowKey]="rowKey()"
@@ -75,14 +75,14 @@ import { ColumnConfig } from './data-grid.types';
           }
 
           @if (rightPinnedColumns().length > 0) {
-            <table class="data-grid-table data-grid-table-right  box-shadow-left">
+            <table class="data-grid-table data-grid-table-right box-shadow-left">
               <thead dataGridHeader class="data-grid-header"
                      [columns]="rightHeaderColumns()"
                      [maxHeaderDepth]="maxHeaderDepth()"
                      (columnPinChange)="handleColumnPinChange($event)">
               </thead>
 
-              <tbody dataGridBody class="data-grid-body box-shadow-left"
+              <tbody dataGridBody class="data-grid-body"
                      [data]="data()"
                      [columns]="rightPinnedColumns()"
                      [rowKey]="rowKey()"

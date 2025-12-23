@@ -60,8 +60,10 @@ import { PinIconComponent } from './pin-icon';
         padding: 0 !important;
         background-clip: padding-box; /* Fixes border issues on sticky headers */
 
-        &.pinned-right:first-child {
-                border-left: 1px solid var(--c-border);
+        &.pinned-left {
+          .header-cell-content:last-child {
+          border: none;
+        }
         }
     }
     .header-cell-content {
