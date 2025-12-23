@@ -1,16 +1,17 @@
-<router-outlet></router-outlet>
-<app-data-grid
-  [data]="data()"
-  [columns]="columns()"
-  height="500px"
-  rowKey="id"
-  rowKey="id"
->
-  <ng-template cellTemplate="cell-status" let-value="value">
-    <strong>{{ value }}</strong>
-  </ng-template>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="logo">Angular Starter</div>
+    <nav>
+      <a routerLink="/button" routerLinkActive="active">
+        Buttons
+      </a>
+      <a routerLink="/grid" routerLinkActive="active">
+        Data Grid
+      </a>
+    </nav>
+  </aside>
 
-  <ng-template cellTemplate="cell-actions">
-    <button>Edit</button>
-  </ng-template>
-</app-data-grid>
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

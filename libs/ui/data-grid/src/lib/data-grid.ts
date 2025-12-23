@@ -34,7 +34,7 @@ import { ColumnConfig } from './data-grid.types';
 @Component({
   selector: 'app-data-grid',
   standalone: true,
-  imports: [DataGridHeaderComponent, DataGridBodyComponent, CellTemplateDirective],
+  imports: [DataGridHeaderComponent, DataGridBodyComponent],
   template: `
     <div class="data-grid" [style.height]="height()" #dataGrid>
       <div class="data-grid-container">

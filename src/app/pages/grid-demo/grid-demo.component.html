@@ -1,0 +1,14 @@
+<div style="padding: 24px;">
+    <h2 style="margin-bottom: 24px; font-size: 1.5rem; font-weight: 600;">Data Grid Demo</h2>
+
+    <app-data-grid [data]="data()" [columns]="columns()" height="500px" rowKey="id" rowKey="id">
+        <ng-template cellTemplate="cell-status" let-value="value">
+            <strong>{{ value }}</strong>
+        </ng-template>
+
+        <ng-template cellTemplate="cell-actions">
+            <button
+                style="padding: 4px 12px; border: 1px solid #ccc; border-radius: 4px; background: white; cursor: pointer;">Edit</button>
+        </ng-template>
+    </app-data-grid>
+</div>

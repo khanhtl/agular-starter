@@ -1,0 +1,66 @@
+<!-- Ripple Container -->
+<span class="ripple-container" #rippleContainer></span>
+
+<!-- Main Content Area -->
+<span class="button-content main-content">
+  <!-- Slot for left icon -->
+  <ng-content select="[slot=start]"></ng-content>
+
+  <!-- Main label -->
+  <ng-content></ng-content>
+
+  <!-- Slot for right icon -->
+  <ng-content select="[slot=end]"></ng-content>
+</span>
+
+<!-- Separator (Only if split) -->
+@if (split()) {
+<span class="separator"></span>
+}
+
+<!-- Dropdown Chevron & Overlay -->
+@if (dropdown() || menu() || items().length > 0) {
+<span class="button-content dropdown-trigger" [class.invisible]="loading()" cdkOverlayOrigin #trigger="cdkOverlayOrigin"
+  (click)="toggle($event)">
+  <svg class="dropdown-chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m6 9 6 6 6-6" />
+  </svg>
+</span>
+
+<!-- Dropdown Overlay (Must be inside @if to access #trigger) -->
+<ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="trigger" [cdkConnectedOverlayOpen]="isOpen()"
+  [cdkConnectedOverlayHasBackdrop]="true" [cdkConnectedOverlayBackdropClass]="'cdk-overlay-transparent-backdrop'"
+  (backdropClick)="close()">
+
+  <div class="dropdown-panel">
+    <!-- If User Content Template -->
+    @if (menu()) {
+    <ng-container *ngTemplateOutlet="menu()"></ng-container>
+    }
+    <!-- Else If Items List -->
+    @else if (items().length > 0) {
+    <div class="dropdown-list">
+      @for (item of items(); track item.label) {
+      <button class="dropdown-item" [disabled]="item.disabled" (click)="handleItemClick(item)">
+        @if (item.icon) {
+        <i [class]="item.icon"></i>
+        }
+        {{ item.label }}
+      </button>
+      }
+    </div>
+    }
+  </div>
+</ng-template>
+}
+
+<!-- Loading Spinner -->
+@if (loading()) {
+<span class="spinner-overlay">
+  <svg class="spinner" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+  </svg>
+</span>
+}

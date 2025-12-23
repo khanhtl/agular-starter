@@ -34,6 +34,9 @@
       ],
       "@angular-starter/ui/data-grid": [
         "libs/ui/data-grid/src/index.ts"
+      ],
+      "@angular-starter/ui/button": [
+        "libs/ui/button/src/index.ts"
       ]
     }
   },
