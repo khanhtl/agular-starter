@@ -24,6 +24,7 @@ import { ColumnConfig } from './data-grid.types';
         [row]="row()"
         [column]="column"
         [rowIndex]="rowIndex()"
+        [loading]="loading()"
         [cellTemplate]="getCellTemplate(column)">
       </td>
     }
@@ -74,6 +75,9 @@ export class DataGridRowComponent {
 
   /** The index of this row in the dataset. */
   rowIndex = input<number>();
+
+  /** Whether the row is in loading state. */
+  loading = input<boolean>(false);
 
   /** Map of cell templates. */
   cellTemplatesMap = input<Map<string, any>>(new Map());

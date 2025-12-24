@@ -41,7 +41,7 @@ import { ColumnConfig } from './data-grid.types';
         <div class="data-grid-table-wrapper">
 
           @if (leftPinnedColumns().length > 0) {
-            <table class="data-grid-table data-grid-table-left box-shadow-right">
+            <table class="data-grid-table data-grid-table-left box-shadow-right" [class.loading]="loading()">
               <thead dataGridHeader class="data-grid-header"
                      [columns]="leftHeaderColumns()"
                      [maxHeaderDepth]="maxHeaderDepth()"
@@ -52,13 +52,15 @@ import { ColumnConfig } from './data-grid.types';
                      [data]="data()"
                      [columns]="leftPinnedColumns()"
                      [rowKey]="rowKey()"
+                     [loading]="loading()"
+                     [skeletonRows]="skeletonRows()"
                      [cellTemplatesMap]="cellTemplateMap()">
               </tbody>
             </table>
           }
 
           @if (regularColumns().length > 0) {
-            <table class="data-grid-table data-grid-table-regular">
+            <table class="data-grid-table data-grid-table-regular" [class.loading]="loading()">
               <thead dataGridHeader class="data-grid-header"
                      [columns]="regularHeaderColumns()"
                      [maxHeaderDepth]="maxHeaderDepth()"
@@ -69,13 +71,15 @@ import { ColumnConfig } from './data-grid.types';
                      [data]="data()"
                      [columns]="regularColumns()"
                      [rowKey]="rowKey()"
+                     [loading]="loading()"
+                     [skeletonRows]="skeletonRows()"
                      [cellTemplatesMap]="cellTemplateMap()">
               </tbody>
             </table>
           }
 
           @if (rightPinnedColumns().length > 0) {
-            <table class="data-grid-table data-grid-table-right box-shadow-left">
+            <table class="data-grid-table data-grid-table-right box-shadow-left" [class.loading]="loading()">
               <thead dataGridHeader class="data-grid-header"
                      [columns]="rightHeaderColumns()"
                      [maxHeaderDepth]="maxHeaderDepth()"
@@ -86,6 +90,8 @@ import { ColumnConfig } from './data-grid.types';
                      [data]="data()"
                      [columns]="rightPinnedColumns()"
                      [rowKey]="rowKey()"
+                     [loading]="loading()"
+                     [skeletonRows]="skeletonRows()"
                      [cellTemplatesMap]="cellTemplateMap()">
               </tbody>
             </table>
@@ -114,6 +120,7 @@ import { ColumnConfig } from './data-grid.types';
         position: relative;
         width: 100%;
         min-width: 100%;
+        height: 100%;
         display: flex;
         flex-direction: row;
         align-items: flex-start;
@@ -123,6 +130,10 @@ import { ColumnConfig } from './data-grid.types';
         border-collapse: separate;
         border-spacing: 0;
         table-layout: fixed;
+
+        &.loading {
+          min-height: 100%;
+        }
 
         &.data-grid-table-left {
           position: sticky;
@@ -179,6 +190,12 @@ export class DataGridComponent implements AfterViewInit, OnDestroy {
   /** Height of the grid container (CSS string). Default `400px`. */
   height = input<string>('400px');
 
+  /** Whether the grid is in loading state. */
+  loading = input<boolean>(false);
+
+  /** Number of skeleton rows to show when loading. Default `20`. */
+  skeletonRows = input<number>(20);
+
   /** Unique property name in data to serve as row key (e.g., 'id'). Default `id`. */
   rowKey = input<string>('id');
 
@@ -215,9 +232,9 @@ export class DataGridComponent implements AfterViewInit, OnDestroy {
     });
 
     effect(() => {
-      // Sync rows when data changes
-      // We read data() to register dependency
+      // Sync rows when data or loading changes
       this.data();
+      this.loading();
       setTimeout(() => this.syncRowHeights(), 0);
     });
   }

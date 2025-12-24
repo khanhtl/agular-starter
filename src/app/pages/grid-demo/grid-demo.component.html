@@ -1,7 +1,12 @@
 <div style="padding: 24px;">
-    <h2 style="margin-bottom: 24px; font-size: 1.5rem; font-weight: 600;">Data Grid Demo</h2>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <h2 style="margin: 0; font-size: 1.5rem; font-weight: 600;">Data Grid Demo</h2>
+        <app-button (click)="toggleLoading()" [disabled]="isLoading()">
+            {{ isLoading() ? 'Loading...' : 'Reload Data' }}
+        </app-button>
+    </div>
 
-    <app-data-grid [data]="data()" [columns]="columns()" height="500px" rowKey="id" rowKey="id">
+    <app-data-grid [data]="data()" [columns]="columns()" [loading]="isLoading()" height="500px" rowKey="id">
         <ng-template cellTemplate="cell-status" let-value="value">
             <strong>{{ value }}</strong>
         </ng-template>

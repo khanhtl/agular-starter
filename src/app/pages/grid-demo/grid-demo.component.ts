@@ -86,4 +86,12 @@ export class GridDemoComponent {
     }
 
     data = signal<Record<string, any>[]>(this.generateSampleData());
+    isLoading = signal<boolean>(false);
+
+    toggleLoading() {
+        this.isLoading.set(true);
+        setTimeout(() => {
+            this.isLoading.set(false);
+        }, 2000);
+    }
 }

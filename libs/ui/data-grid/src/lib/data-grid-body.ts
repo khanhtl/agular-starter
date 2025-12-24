@@ -1,5 +1,6 @@
 import {
   Component,
+  computed,
   input
 } from '@angular/core';
 import { DataGridRowComponent } from './data-grid-row';
@@ -14,13 +15,14 @@ import { ColumnConfig } from './data-grid.types';
   standalone: true,
   imports: [DataGridRowComponent],
   template: `
-    @for (row of data(); let rowIndex = $index; track trackByRow(rowIndex, row)) {
+    @for (row of displayData(); let rowIndex = $index; track trackByRow(rowIndex, row)) {
       <tr
         class="data-grid-row"
         dataGridRow
         [row]="row"
         [columns]="columns()"
         [rowIndex]="rowIndex"
+        [loading]="loading()"
         [cellTemplatesMap]="cellTemplatesMap()">
       </tr>
     }
@@ -49,10 +51,25 @@ export class DataGridBodyComponent {
   /** Unique key to track rows for performance optimization. */
   rowKey = input<string | undefined>(undefined);
 
+  /** Whether the grid is in loading state. */
+  loading = input<boolean>(false);
+
+  /** Number of skeleton rows to show when loading. Default `5`. */
+  skeletonRows = input<number>(5);
+
   /** Map of cell templates for custom rendering. */
   cellTemplatesMap = input<Map<string, any>>(new Map());
 
+  /** Computed list of data to display, including skeletons if loading. */
+  displayData = computed(() => {
+    if (this.loading()) {
+      return Array(this.skeletonRows()).fill({});
+    }
+    return this.data();
+  });
+
   trackByRow(index: number, row: Record<string, any>): any {
+    if (this.loading()) return index;
     const key = this.rowKey();
     return key ? row[key] : index;
   }

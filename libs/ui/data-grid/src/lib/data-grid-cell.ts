@@ -11,21 +11,27 @@ import { ColumnConfig } from './data-grid.types';
   imports: [CommonModule],
   standalone: true,
   template: `
-    <ng-container *ngIf="cellTemplate(); else default">
-      <ng-container
-        [ngTemplateOutlet]="cellTemplate()"
-        [ngTemplateOutletContext]="{
-          row: row(),
-          value: row()[column().key],
-          column: column(),
-          rowIndex: rowIndex()
-        }"
-      />
-    </ng-container>
+    @if (loading()) {
+      <div class="skeleton-wrapper">
+        <div class="skeleton"></div>
+      </div>
+    } @else {
+      <ng-container *ngIf="cellTemplate(); else default">
+        <ng-container
+          [ngTemplateOutlet]="cellTemplate()"
+          [ngTemplateOutletContext]="{
+            row: row(),
+            value: row()[column().key],
+            column: column(),
+            rowIndex: rowIndex()
+          }"
+        />
+      </ng-container>
 
-    <ng-template #default>
-      {{ row()[column().key] }}
-    </ng-template>
+      <ng-template #default>
+        {{ row()[column().key] }}
+      </ng-template>
+    }
   `,
   styles: [`
     .data-grid-cell {
@@ -61,6 +67,44 @@ import { ColumnConfig } from './data-grid.types';
         background-color: var(--c-bg);
       }
     }
+
+    .skeleton-wrapper {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        min-height: 20px;
+    }
+
+    .skeleton {
+        width: 100%;
+        height: 16px;
+        border-radius: 4px;
+        background: linear-gradient(90deg, 
+            rgba(0, 0, 0, 0.1) 25%, 
+            rgba(0, 0, 0, 0.2) 50%, 
+            rgba(0, 0, 0, 0.1) 75%
+        );
+        background-size: 200% 100%;
+        animation: skeleton-loading 1.5s infinite linear;
+    }
+
+    .dark .skeleton {
+        background: linear-gradient(90deg, 
+            rgba(255, 255, 255, 0.1) 25%, 
+            rgba(255, 255, 255, 0.2) 50%, 
+            rgba(255, 255, 255, 0.1) 75%
+        );
+    }
+
+    @keyframes skeleton-loading {
+        0% {
+            background-position: 200% 0;
+        }
+        100% {
+            background-position: -200% 0;
+        }
+    }
   `]
 })
 export class DataGridCellComponent {
@@ -72,6 +116,9 @@ export class DataGridCellComponent {
 
   /** The index of the row. */
   rowIndex = input<number>();
+
+  /** Whether the cell is in loading state. */
+  loading = input<boolean>(false);
 
   /** 
    * Custom template to render for this cell. 
