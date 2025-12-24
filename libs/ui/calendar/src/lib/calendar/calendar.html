@@ -1,0 +1,85 @@
+<div class="calendar-container">
+    <!-- Header -->
+    <div class="calendar-header">
+        <button class="nav-btn prev" (click)="prev()">
+            <svg viewBox="0 0 24 24" width="20" height="20">
+                <path fill="currentColor" d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+            </svg>
+        </button>
+
+        <button class="view-selector" (click)="toggleView()">
+            {{ headerTitle() }}
+        </button>
+
+        <button class="nav-btn next" (click)="next()">
+            <svg viewBox="0 0 24 24" width="20" height="20">
+                <path fill="currentColor" d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+            </svg>
+        </button>
+    </div>
+
+    <!-- Body -->
+    <div class="calendar-body">
+
+        <!-- Month View -->
+        @if (viewType() === 'month') {
+        <div class="month-view">
+            <div class="week-days">
+                @for (day of weekDays(); track day) {
+                <div class="week-day">{{ day }}</div>
+                }
+            </div>
+            <div class="grid">
+                @for (cell of monthGrid(); track cell.date.getTime()) {
+                <button class="cell day-cell" [class.current-month]="cell.isCurrentMonth"
+                    [class.other-month]="cell.isOtherView" [class.today]="cell.isToday"
+                    [class.selected]="cell.isSelected" (click)="selectCell(cell)">
+                    <span class="cell-label">{{ cell.label }}</span>
+                    @if (cell.events && cell.events.length > 0) {
+                    <div class="event-dots">
+                        @for (event of cell.events.slice(0, 3); track event.title) {
+                        <span class="event-dot" [style.background-color]="event.color || 'var(--cal-primary)'"></span>
+                        }
+                        @if (cell.events.length > 3) {
+                        <span class="event-more">+</span>
+                        }
+                    </div>
+                    }
+                </button>
+                }
+            </div>
+        </div>
+        }
+
+        <!-- Year View -->
+        @if (viewType() === 'year') {
+        <div class="year-view grid">
+            @for (cell of yearGrid(); track cell.label) {
+            <button class="cell year-cell" [class.today]="cell.isToday" [class.selected]="cell.isSelected"
+                (click)="selectCell(cell)">
+                {{ cell.label }}
+            </button>
+            }
+        </div>
+        }
+
+        <!-- Decade View -->
+        @if (viewType() === 'decade') {
+        <div class="decade-view grid">
+            @for (cell of decadeGrid(); track cell.label) {
+            <button class="cell decade-cell" [class.other-view]="cell.isOtherView" [class.today]="cell.isToday"
+                [class.selected]="cell.isSelected" (click)="selectCell(cell)">
+                {{ cell.label }}
+            </button>
+            }
+        </div>
+        }
+    </div>
+
+    <!-- Footer (Optional: Today button) -->
+    <div class="calendar-footer">
+        <button class="today-btn" (click)="selectToday()">
+            {{ locale().today }}
+        </button>
+    </div>
+</div>

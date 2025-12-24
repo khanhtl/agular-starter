@@ -19,6 +19,10 @@ export const appRoutes: Route[] = [
             import('@angular-starter/feature/candidate')
                 .then(m => m.candidateRoutes),
     },
+    {
+        path: 'calendar',
+        loadComponent: () => import('./pages/calendar-demo/calendar-demo.component').then(m => m.CalendarDemoComponent)
+    },
 
     { path: '', redirectTo: 'button', pathMatch: 'full' },
 ];

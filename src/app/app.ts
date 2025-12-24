@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { LucideAngularModule, MousePointer2, Table2, TextCursorInput } from 'lucide-angular';
+import { Calendar, LucideAngularModule, MousePointer2, Table2, TextCursorInput } from 'lucide-angular';
 
 @Component({
   selector: 'app-root',
@@ -13,4 +13,5 @@ export class App {
   readonly MousePointer2 = MousePointer2;
   readonly Table2 = Table2;
   readonly TextCursorInput = TextCursorInput;
+  readonly Calendar = Calendar;
 }

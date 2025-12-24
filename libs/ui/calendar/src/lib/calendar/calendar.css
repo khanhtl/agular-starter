@@ -1,0 +1,224 @@
+
+:host {
+    display: block;
+    width: 280px;
+    user-select: none;
+    font-family: inherit;
+    --cal-primary: var(--c-brand, #42b983);
+    --cal-text: var(--c-text, #374151);
+    --cal-bg: var(--c-white, #fff);
+    --cal-border: var(--c-border, #e5e7eb);
+    --cal-hover: rgba(var(--c-brand-rgb, 66, 185, 131), 0.1);
+    --cal-radius: var(--w-radius, 8px);
+}
+
+.calendar-container {
+    background: var(--cal-bg);
+    border: 1px solid var(--cal-border);
+    border-radius: var(--cal-radius);
+    padding: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Header */
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.nav-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--cal-text);
+    transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+    background: var(--cal-hover);
+    color: var(--cal-primary);
+}
+
+.view-selector {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--cal-text);
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.view-selector:hover {
+    background: var(--cal-hover);
+    color: var(--cal-primary);
+}
+
+/* Body */
+.calendar-body {
+    min-height: 240px;
+    display: flex;
+    flex-direction: column;
+}
+
+.week-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-bottom: 8px;
+}
+
+.week-day {
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #9ca3af;
+    text-transform: uppercase;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+}
+
+.year-view, .decade-view {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding-top: 10px;
+}
+
+/* Cell Styles */
+.cell {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    height: 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: var(--cal-text);
+    transition: all 0.2s ease;
+    position: relative;
+    padding: 0;
+}
+
+.cell-label {
+    z-index: 1;
+}
+
+.event-dots {
+    display: flex;
+    gap: 2px;
+    margin-top: 2px;
+    height: 4px;
+    align-items: center;
+    justify-content: center;
+}
+
+.event-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+}
+
+.event-more {
+    font-size: 8px;
+    line-height: 1;
+    color: #9ca3af;
+    margin-left: 1px;
+}
+
+.day-cell {
+    height: 36px;
+}
+
+.year-cell, .decade-cell {
+    height: 48px;
+}
+
+.cell:hover {
+    background: var(--cal-hover);
+    color: var(--cal-primary);
+}
+
+.cell.today {
+    color: var(--cal-primary);
+    font-weight: 700;
+}
+
+.cell.today::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    background: var(--cal-primary);
+    border-radius: 50%;
+}
+
+.cell.selected {
+    background: var(--cal-primary) !important;
+    color: white !important;
+    font-weight: 600;
+}
+
+.cell.selected::after {
+    background: white;
+}
+
+.cell.other-month, .cell.other-view {
+    color: #d1d5db;
+}
+
+.calendar-footer {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--cal-border);
+    display: flex;
+    justify-content: center;
+}
+
+.today-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--cal-primary);
+    padding: 6px 12px;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.today-btn:hover {
+    background: var(--cal-hover);
+}
+
+.dark {
+    --cal-bg: #1f2937;
+    --cal-text: #f3f4f6;
+    --cal-border: #374151;
+    --cal-hover: rgba(66, 185, 131, 0.15);
+}
+
+.dark .week-day {
+    color: #6b7280;
+}
+
+.dark .cell.other-month, .dark .cell.other-view {
+    color: #4b5563;
+}
