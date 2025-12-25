@@ -15,9 +15,24 @@ import { Code, Eye, EyeOff, LucideAngularModule, Pencil, Settings } from 'lucide
     styles: [`
     .playground-grid {
       display: grid;
-      grid-template-columns: 1fr 300px;
+      grid-template-columns: minmax(0, 1fr) 300px;
       gap: 2rem;
       align-items: start;
+    }
+    .grid-scroll-container {
+      width: 100%;
+      overflow-x: auto;
+      background: #fff;
+      border-radius: 0.5rem;
+      border: 1px solid #e2e8f0;
+    }
+    @media (max-width: 1200px) {
+      .playground-grid {
+        grid-template-columns: 1fr;
+      }
+      .controls-panel {
+        position: static;
+      }
     }
     .controls-panel {
       background: #f8fafc;

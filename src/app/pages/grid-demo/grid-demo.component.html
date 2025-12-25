@@ -17,24 +17,26 @@
                 <!-- Main Preview Area -->
                 <div class="demo-card">
                     <div class="preview-area" style="display: block; padding: 0; min-height: 600px;">
-                        <app-data-grid [data]="data()" [columns]="columns()" [loading]="config().loading"
-                            [height]="config().height">
+                        <div class="grid-scroll-container">
+                            <app-data-grid [data]="data()" [columns]="columns()" [loading]="config().loading"
+                                [height]="config().height">
 
-                            <!-- Status Badge Template -->
-                            <ng-template appCellTemplate="cell-status" let-value="value">
-                                <span class="status-badge" [class]="value.toLowerCase().replace(' ', '-')">
-                                    {{ value }}
-                                </span>
-                            </ng-template>
+                                <!-- Status Badge Template -->
+                                <ng-template appCellTemplate="cell-status" let-value="value">
+                                    <span class="status-badge" [class]="value.toLowerCase().replace(' ', '-')">
+                                        {{ value }}
+                                    </span>
+                                </ng-template>
 
-                            <!-- Actions Template -->
-                            <ng-template appCellTemplate="cell-actions">
-                                <app-button variant="ghost" size="sm">
-                                    <i-lucide [img]="Pencil" [size]="14"></i-lucide>
-                                </app-button>
-                            </ng-template>
+                                <!-- Actions Template -->
+                                <ng-template appCellTemplate="cell-actions">
+                                    <app-button variant="ghost" size="sm">
+                                        <i-lucide [img]="Pencil" [size]="14"></i-lucide>
+                                    </app-button>
+                                </ng-template>
 
-                        </app-data-grid>
+                            </app-data-grid>
+                        </div>
                     </div>
 
                     <!-- Generated Code Section (CodeMirror) -->
