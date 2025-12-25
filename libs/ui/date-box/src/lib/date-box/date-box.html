@@ -1,1 +1,28 @@
-<p>DateBox works!</p>
+<div class="date-box-container" #container>
+    @if (label()) {
+    <label class="date-box-label">{{ label() }}</label>
+    }
+
+    <div class="input-group" [class.focused]="isOpen()">
+        <input type="text" [formControl]="inputControl" [placeholder]="placeholder()" appDateInput="dd/MM/yyyy"
+            (blur)="onInputBlur()" (focus)="isOpen.set(true)" class="date-input" />
+
+        @if (dateValue() && !inputControl.disabled) {
+        <button class="clear-btn" (click)="onDateSelect(null); $event.stopPropagation()" type="button">
+            <i-lucide [img]="XIcon" [size]="14"></i-lucide>
+        </button>
+        }
+
+        <button class="picker-btn" (click)="toggleCalendar($event)" type="button">
+            <i-lucide [img]="CalendarIcon" [size]="18"></i-lucide>
+        </button>
+    </div>
+
+    <!-- Dropdown -->
+    @if (isOpen()) {
+    <div class="calendar-dropdown">
+        <app-calendar [value]="dateValue()" (valueChange)="onDateSelect($event)">
+        </app-calendar>
+    </div>
+    }
+</div>

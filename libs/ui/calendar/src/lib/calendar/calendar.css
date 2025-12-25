@@ -155,25 +155,31 @@
 
 .cell.today {
     color: var(--cal-primary);
+    border: 1px solid var(--cal-primary);
     font-weight: 700;
 }
 
-.cell.today::after {
-    content: '';
-    position: absolute;
-    bottom: 4px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 4px;
-    height: 4px;
-    background: var(--cal-primary);
-    border-radius: 50%;
-}
 
 .cell.selected {
     background: var(--cal-primary) !important;
     color: white !important;
     font-weight: 600;
+}
+
+.cell.in-range {
+    background: var(--cal-hover);
+    color: var(--cal-primary);
+    border-radius: 0;
+}
+
+.cell.range-start {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.cell.range-end {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
 .cell.selected::after {

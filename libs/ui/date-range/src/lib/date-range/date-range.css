@@ -1,0 +1,218 @@
+
+:host {
+    display: inline-block;
+    width: 350px;
+    font-family: inherit;
+    --dr-primary: var(--c-brand, #42b983);
+    --dr-text: var(--c-text, #374151);
+    --dr-bg: var(--c-white, #fff);
+    --dr-border: var(--c-border, #e5e7eb);
+    --dr-radius: var(--w-radius, 8px);
+    --dr-hover: rgba(var(--c-brand-rgb, 66, 185, 131), 0.1);
+}
+
+.date-range-container {
+    position: relative;
+    width: 100%;
+}
+
+.date-range-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--dr-text);
+    margin-bottom: 6px;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    background: var(--dr-bg);
+    border: 1px solid var(--dr-border);
+    border-radius: var(--dr-radius);
+    padding: 2px 12px;
+    transition: all 0.2s ease;
+}
+
+.input-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.input-group:hover {
+    border-color: var(--dr-primary);
+}
+
+.input-group.focused {
+    border-color: var(--dr-primary);
+    box-shadow: 0 0 0 3px rgba(66, 185, 131, 0.15);
+}
+
+
+
+.date-input,
+.date-input:focus {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    background: transparent;
+    padding: 8px 0;
+    font-size: 0.95rem;
+    color: var(--dr-text);
+    outline: none !important;
+    box-shadow: none !important;
+    text-align: center;
+}
+
+.separator {
+    margin: 0 8px;
+    color: #9ca3af;
+    font-size: 0.85rem;
+}
+
+.picker-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    color: #9cb2c9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+}
+
+.clear-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    color: #d1d5db;
+    display: flex;
+    align-items: center;
+    transition: color 0.2s;
+}
+
+.clear-btn:hover { color: #ef4444; }
+.picker-btn:hover { color: var(--dr-primary); }
+
+/* Range Dropdown */
+.range-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    z-index: 1000;
+    background: var(--dr-bg);
+    border-radius: 12px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border: 1px solid var(--dr-border);
+    padding: 16px;
+    width: 620px;
+    transform-origin: top;
+    animation: slideDown 0.2s ease-out;
+}
+
+.range-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.current-months {
+    flex: 1;
+    display: flex;
+    justify-content: space-around;
+    font-weight: 600;
+    color: var(--dr-text);
+    font-size: 0.95rem;
+}
+
+.calendars-wrapper {
+    display: flex;
+    gap: 16px;
+}
+
+.calendars-wrapper app-calendar {
+    flex: 1;
+    border: none;
+    box-shadow: none;
+    width: auto;
+}
+
+.range-footer {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--dr-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.range-summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tag {
+    background: var(--dr-hover);
+    color: var(--dr-primary);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.range-arrow {
+    color: #9ca3af;
+}
+
+.apply-btn {
+    background: var(--dr-primary);
+    color: white;
+    border: none;
+    padding: 8px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.apply-btn:hover {
+    opacity: 0.9;
+}
+
+.nav-btn {
+    background: transparent;
+    border: 1px solid var(--dr-border);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--dr-text);
+    transition: all 0.2s;
+}
+
+.nav-btn:hover {
+    background: var(--dr-hover);
+    color: var(--dr-primary);
+    border-color: var(--dr-primary);
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.dark .range-dropdown {
+    background: #1f2937;
+    border-color: #374151;
+}
+
+.dark .current-months { color: #f3f4f6; }
+.dark .nav-btn { color: #f3f4f6; border-color: #4b5563; }

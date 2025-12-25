@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { Calendar, LucideAngularModule, MousePointer2, Table2, TextCursorInput } from 'lucide-angular';
+import { Calendar, CalendarDays, CalendarRange, LucideAngularModule, MousePointer2, Table2, TextCursorInput } from 'lucide-angular';
 
 @Component({
   selector: 'app-root',
@@ -14,4 +14,6 @@ export class App {
   readonly Table2 = Table2;
   readonly TextCursorInput = TextCursorInput;
   readonly Calendar = Calendar;
+  readonly CalendarDays = CalendarDays;
+  readonly CalendarRange = CalendarRange;
 }

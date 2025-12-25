@@ -1,158 +1,181 @@
-import {
-  AppInputComponent
-} from '@angular-starter/ui/input';
+
+import { ButtonComponent } from '@angular-starter/ui/button';
+import { AppInputComponent } from '@angular-starter/ui/input';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, computed, effect, ElementRef, OnDestroy, signal, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Binary, Eye, EyeOff, Keyboard, LucideAngularModule, ShieldCheck } from 'lucide-angular';
+import { html } from '@codemirror/lang-html';
+import { basicSetup, EditorView } from 'codemirror';
+import { Calendar, Code, CreditCard, DollarSign, Eye, EyeOff, Lock, LucideAngularModule, Mail, Phone, Search, User } from 'lucide-angular';
 
 @Component({
   selector: 'app-input-demo',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    AppInputComponent,
-    LucideAngularModule
-  ],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, AppInputComponent, LucideAngularModule, ButtonComponent],
   templateUrl: './input-demo.component.html',
   styles: [`
-    :host {
+    .playground-grid {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 2rem;
+      align-items: start;
+    }
+    .controls-panel {
+      background: #f8fafc;
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      border: 1px solid #e2e8f0;
+    }
+    .control-group {
+      margin-bottom: 1.25rem;
+    }
+    .control-group label {
       display: block;
-      background-color: #f9fafb;
-      min-height: 100%;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #64748b;
+      margin-bottom: 0.5rem;
     }
-    .demo-container {
-      padding: 3rem 2rem;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-    .header-section {
-      margin-bottom: 3rem;
-      border-bottom: 1px solid #e5e7eb;
-      padding-bottom: 2rem;
-    }
-    .demo-section {
-      margin-bottom: 4rem;
-    }
-    .section-header {
+    .control-row {
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      margin-bottom: 1.5rem;
-    }
-    .section-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 32px;
-      height: 32px;
-      background: #eff6ff;
-      color: #2563eb;
-      border-radius: 8px;
-    }
-    .demo-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1.5rem;
-    }
-    .card {
-      background: white;
-      padding: 1.5rem;
-      border-radius: 1rem;
-      box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-      border: 1px solid #f3f4f6;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-    }
-    .label-group {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.5rem;
-    }
-    .label {
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: #374151;
-    }
-    .badge {
-      font-size: 0.7rem;
-      padding: 0.125rem 0.5rem;
-      background: #f3f4f6;
-      border-radius: 9999px;
-      color: #6b7280;
-      text-transform: uppercase;
-      font-weight: 700;
+      margin-bottom: 0.75rem;
     }
     .value-display {
       margin-top: 1rem;
-      padding-top: 1rem;
-      border-top: 1px dashed #f3f4f6;
+      padding: 0.75rem;
+      background: #f1f5f9;
+      border-radius: 0.5rem;
+      font-family: monospace;
+      font-size: 0.875rem;
+      color: #334155;
+      border: 1px solid #e2e8f0;
     }
-    .val-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.75rem;
+    .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 1.5rem;
     }
-    .val-label {
-      color: #9ca3af;
-    }
-    .val-content {
-      font-family: 'JetBrains Mono', monospace;
-      color: #2563eb;
-      font-weight: 600;
-      background: #f0f9ff;
-      padding: 2px 6px;
-      border-radius: 4px;
-    }
-    .hint {
-      margin-top: 0.5rem;
-      font-size: 0.75rem;
-      color: #9ca3af;
-    }
-    h2 {
-      font-size: 2rem;
-      font-weight: 800;
-      letter-spacing: -0.025em;
-      color: #111827;
-      margin: 0;
-    }
-    h3 {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: #1f2937;
-      margin: 0;
-    }
-    .text-secondary {
-      color: #6b7280;
-      font-size: 1.125rem;
-      margin-top: 0.5rem;
+    .preview-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
     }
   `]
 })
-export class InputDemoComponent {
-  readonly Keyboard = Keyboard;
-  readonly Binary = Binary;
-  readonly ShieldCheck = ShieldCheck;
-  readonly Eye = Eye;
-  readonly EyeOff = EyeOff;
+export class InputDemoComponent implements OnDestroy {
+  activeTab = signal<'preview' | 'api'>('preview');
 
-  form = new FormGroup({
-    text: new FormControl('Hello World', Validators.required),
-    password: new FormControl('secret123'),
-    currency: new FormControl(1250000),
-    date: new FormControl('23/12/2025'),
-    numeric: new FormControl(12.5),
-    accounting: new FormControl(1500000.75),
-    phone: new FormControl('0971018134'),
-    customDate: new FormControl('31/12/2025')
+  // Icons
+  UserIcon = User;
+  MailIcon = Mail;
+  PhoneIcon = Phone;
+  CalendarIcon = Calendar;
+  CreditCardIcon = CreditCard;
+  LockIcon = Lock;
+  DollarIcon = DollarSign;
+  SearchIcon = Search;
+  CodeIcon = Code;
+  EyeIcon = Eye;
+  EyeOffIcon = EyeOff;
+
+  // CodeMirror
+  showCode = signal(false);
+  @ViewChild('codeEditor') codeEditorRef!: ElementRef<HTMLDivElement>;
+  editorView?: EditorView;
+
+  // Playground Config
+  config = signal({
+    label: 'Playground Input',
+    placeholder: 'Type something...',
+    hint: 'This is a hint text',
+    disabled: false,
+    readonly: false,
+    required: false,
+    clearable: true,
+    errorText: 'This field is invalid',
+    type: 'text'
   });
 
-  uppercaseFormatter = (value: string) => value.toUpperCase();
+  updateConfig(key: string, value: any) {
+    this.config.update((c: any) => ({ ...c, [key]: value }));
+  }
+
+  // Playground Control
+  playgroundControl = new FormControl('');
+
+  // Showcase Controls
+  showcaseForm = new FormGroup({
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl(''),
+    phone: new FormControl(''),
+    currency: new FormControl(''),
+    date: new FormControl(''),
+    creditCard: new FormControl(''),
+    licensePlate: new FormControl('59-F1 123.45'),
+    search: new FormControl('')
+  });
+
+  generatedCode = computed(() => {
+    const c = this.config();
+    const props = [
+      c.label ? `label="${c.label}"` : '',
+      c.placeholder ? `placeholder="${c.placeholder}"` : '',
+      c.hint ? `hint="${c.hint}"` : '',
+      c.type !== 'text' ? `type="${c.type}"` : '',
+      c.disabled ? 'disabled' : '',
+      c.readonly ? 'readonly' : '',
+      c.clearable ? 'clearable' : '',
+      c.required ? 'required' : '',
+      '[formControl]="control"'
+    ].filter(Boolean).join('\n  ');
+
+    return `<app-input\n  ${props}>\n</app-input>`;
+  });
+
+  constructor() {
+    effect(() => {
+      const code = this.generatedCode();
+      if (this.editorView) {
+        this.editorView.dispatch({
+          changes: { from: 0, to: this.editorView.state.doc.length, insert: code }
+        });
+      }
+    });
+  }
+
+  toggleCode() {
+    this.showCode.update(v => !v);
+    if (this.showCode()) {
+      setTimeout(() => this.initEditor(), 50);
+    } else {
+      this.editorView?.destroy();
+      this.editorView = undefined;
+    }
+  }
+
+  initEditor() {
+    if (!this.codeEditorRef) return;
+
+    this.editorView = new EditorView({
+      doc: this.generatedCode(),
+      extensions: [
+        basicSetup,
+        html(),
+        EditorView.editable.of(false),
+        EditorView.theme({
+          "&": { height: "auto", maxHeight: "300px", fontSize: "14px", backgroundColor: "#f8fafc" },
+          ".cm-scroller": { overflow: "auto" },
+          ".cm-gutters": { backgroundColor: "#f1f5f9", borderRight: "1px solid #e2e8f0" }
+        })
+      ],
+      parent: this.codeEditorRef.nativeElement
+    });
+  }
+
+  ngOnDestroy() {
+    this.editorView?.destroy();
+  }
 }

@@ -1,128 +1,284 @@
-<div class="demo-container">
-    <header class="header-section">
-        <h2>Input Controls</h2>
-        <p class="text-secondary">Explore our suite of intelligent, accessible form control directives.</p>
+<div class="page-container">
+    <header class="page-header">
+        <h1>Input</h1>
+        <p>A comprehensive input component with masking, icons, and validation support.</p>
     </header>
 
-    <form [formGroup]="form" class="mt-8">
-        <!-- Masking Section -->
-        <div class="demo-section">
-            <div class="section-header">
-                <div class="section-icon">
-                    <i-lucide [img]="Keyboard" [size]="18"></i-lucide>
-                </div>
-                <h3>Intelligent Masking</h3>
-            </div>
+    <nav class="tab-nav">
+        <button [class.active]="activeTab() === 'preview'" (click)="activeTab.set('preview')">Preview</button>
+        <button [class.active]="activeTab() === 'api'" (click)="activeTab.set('api')">API</button>
+    </nav>
 
-            <div class="demo-grid">
-                <div class="card">
-                    <app-input label="Phone Number" hint="Pattern: +84 (0000) 000 000" [mask]="'+84 (0000) 000 000'"
-                        formControlName="phone" placeholder="+84 (____) ___ ___" [prefixIcon]="Keyboard">
-                    </app-input>
-                    <div class="value-display">
-                        <div class="val-row">
-                            <span class="val-label">Model State:</span>
-                            <span class="val-content">{{ form.get('phone')?.value }}</span>
+    <div class="tab-content">
+        @if (activeTab() === 'preview') {
+
+        <!-- Interactive Playground -->
+        <div class="demo-section">
+            <h2>Interactive Playground</h2>
+            <div class="playground-grid">
+                <div class="demo-card"
+                    style="min-height: 400px; display: flex; flex-direction: column; justify-content: center;">
+                    <div class="preview-area" style="border: none; background: transparent;">
+                        <app-input [formControl]="playgroundControl" [label]="config().label"
+                            [placeholder]="config().placeholder" [hint]="config().hint" [type]="config().type"
+                            [disabled]="config().disabled" [readonly]="config().readonly" [required]="config().required"
+                            [clearable]="config().clearable"
+                            [errorText]="playgroundControl.invalid ? config().errorText : ''" [prefixIcon]="UserIcon">
+                        </app-input>
+
+
+                        <div class="value-display">
+                            <strong>Control Value:</strong> {{ playgroundControl.value || '(empty)' }}
+                        </div>
+                        <div class="value-display"
+                            style="margin-top: 8px; background-color: #fef2f2; border-color: #fecaca; color: #991b1b;"
+                            *ngIf="playgroundControl.invalid && (playgroundControl.dirty || playgroundControl.touched)">
+                            <strong>Invalid:</strong> {{ config().errorText }}
+                        </div>
+
+
+                        <div class="code-section" style="margin-top: 24px;">
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                <h3 style="margin: 0; font-size: 1rem; color: #64748b;">Generated Code</h3>
+                                <app-button variant="ghost" size="sm" (click)="toggleCode()">
+                                    <i-lucide [img]="showCode() ? EyeOffIcon : CodeIcon" [style.marginRight.px]="8"
+                                        [size]="16"></i-lucide>
+                                    {{ showCode() ? 'Hide Code' : 'Show Code' }}
+                                </app-button>
+                            </div>
+
+                            @if (showCode()) {
+                            <div #codeEditor class="code-editor-container"
+                                style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;"></div>
+                            }
                         </div>
                     </div>
                 </div>
 
-                <div class="card">
-                    <app-input label="Standard Date" hint="Maintains mask while typing" [datePattern]="'dd/MM/yyyy'"
-                        formControlName="customDate" placeholder="DD/MM/YYYY">
-                    </app-input>
-                    <div class="value-display">
-                        <div class="val-row">
-                            <span class="val-label">Model State:</span>
-                            <span class="val-content">{{ form.get('customDate')?.value }}</span>
+                <!-- Right Controls Panel -->
+                <div class="controls-panel">
+                    <h3 style="margin-top: 0; margin-bottom: 1rem; font-size: 1.1rem;">Properties</h3>
+
+                    <div class="control-group">
+                        <div class="control-row">
+                            <input type="checkbox" id="chk-disabled" [ngModel]="config().disabled"
+                                (ngModelChange)="updateConfig('disabled', $event)">
+                            <label for="chk-disabled" style="margin: 0; cursor: pointer;">Disabled</label>
                         </div>
+                        <div class="control-row">
+                            <input type="checkbox" id="chk-readonly" [ngModel]="config().readonly"
+                                (ngModelChange)="updateConfig('readonly', $event)">
+                            <label for="chk-readonly" style="margin: 0; cursor: pointer;">Readonly</label>
+                        </div>
+                        <div class="control-row">
+                            <input type="checkbox" id="chk-required" [ngModel]="config().required"
+                                (ngModelChange)="updateConfig('required', $event)">
+                            <label for="chk-required" style="margin: 0; cursor: pointer;">Required</label>
+                        </div>
+                        <div class="control-row">
+                            <input type="checkbox" id="chk-clearable" [ngModel]="config().clearable"
+                                (ngModelChange)="updateConfig('clearable', $event)">
+                            <label for="chk-clearable" style="margin: 0; cursor: pointer;">Clearable</label>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label>Label</label>
+                        <input type="text" class="app-input"
+                            style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px;"
+                            [ngModel]="config().label" (ngModelChange)="updateConfig('label', $event)">
+                    </div>
+
+                    <div class="control-group">
+                        <label>Placeholder</label>
+                        <input type="text" class="app-input"
+                            style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px;"
+                            [ngModel]="config().placeholder" (ngModelChange)="updateConfig('placeholder', $event)">
+                    </div>
+
+                    <div class="control-group">
+                        <label>Hint</label>
+                        <input type="text" class="app-input"
+                            style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px;"
+                            [ngModel]="config().hint" (ngModelChange)="updateConfig('hint', $event)">
+                    </div>
+
+                    <div class="control-group">
+                        <label>Input Type</label>
+                        <select class="app-input"
+                            style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px;"
+                            [ngModel]="config().type" (ngModelChange)="updateConfig('type', $event)">
+                            <option value="text">Text</option>
+                            <option value="password">Password</option>
+                            <option value="email">Email</option>
+                            <option value="number">Number</option>
+                        </select>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Numeric Section -->
+        <!-- Common Use Cases -->
         <div class="demo-section">
-            <div class="section-header">
-                <div class="section-icon">
-                    <i-lucide [img]="Binary" [size]="18"></i-lucide>
-                </div>
-                <h3>Numeric & Formatting</h3>
-            </div>
+            <h2>Common Use Cases</h2>
+            <div class="card-grid">
 
-            <div class="demo-grid">
-                <div class="card">
-                    <app-input label="Currency (VND)" [format]="'#,##0'" formControlName="currency" placeholder="0"
-                        [prefixIcon]="Binary">
+                <!-- Email (Validation) -->
+                <div class="preview-card">
+                    <app-input label="Email Address" type="email" placeholder="Enter your email"
+                        hint="We'll never share your email." [prefixIcon]="MailIcon"
+                        [formControl]="showcaseForm.controls.email" errorText="Please enter a valid email address">
                     </app-input>
-                    <div class="value-display">
-                        <div class="val-row">
-                            <span class="val-label">Numeric Value:</span>
-                            <span class="val-content">{{ form.get('currency')?.value }}</span>
-                        </div>
+                    <div class="value-display" style="margin-top: 12px; font-size: 0.75rem;">
+                        Value: {{ showcaseForm.controls.email.value }} <br>
+                        Valid: {{ showcaseForm.controls.email.valid }}
                     </div>
                 </div>
 
-                <div class="card">
-                    <app-input label="Fixed Point (Decimal)" [format]="'##.##'" formControlName="numeric"
-                        placeholder="0.00">
+                <!-- Password -->
+                <div class="preview-card">
+                    <app-input label="Password" type="password" placeholder="Enter secure password"
+                        [prefixIcon]="LockIcon" [formControl]="showcaseForm.controls.password">
                     </app-input>
-                    <div class="value-display">
-                        <div class="val-row">
-                            <span class="val-label">Float Value:</span>
-                            <span class="val-content">{{ form.get('numeric')?.value }}</span>
-                        </div>
+                    <div class="value-display" style="margin-top: 12px; font-size: 0.75rem;">
+                        Value: {{ showcaseForm.controls.password.value }}
                     </div>
                 </div>
 
-                <div class="card">
-                    <app-input label="Accounting" [format]="'#,##0.00'" formControlName="accounting" placeholder="0.00">
+                <!-- Phone Mask -->
+                <div class="preview-card">
+                    <app-input label="Phone Number" mask="(000) 000-0000" placeholder="(555) 123-4567"
+                        [prefixIcon]="PhoneIcon" [formControl]="showcaseForm.controls.phone">
                     </app-input>
-                    <div class="value-display">
-                        <div class="val-row">
-                            <span class="val-label">Raw Model:</span>
-                            <span class="val-content">{{ form.get('accounting')?.value }}</span>
-                        </div>
+                    <div class="value-display" style="margin-top: 12px; font-size: 0.75rem;">
+                        Value: {{ showcaseForm.controls.phone.value }}
                     </div>
                 </div>
+
+                <!-- Currency -->
+                <div class="preview-card">
+                    <app-input label="Salary Expectation" mask="currency" suffix="₫" textAlign="right" placeholder="0"
+                        [prefixIcon]="DollarIcon" [formControl]="showcaseForm.controls.currency">
+                    </app-input>
+                    <div class="value-display" style="margin-top: 12px; font-size: 0.75rem;">
+                        Value: {{ showcaseForm.controls.currency.value }}
+                    </div>
+                </div>
+
+                <!-- Date Mask -->
+                <div class="preview-card">
+                    <app-input label="Birth Date" mask="00/00/0000" placeholder="DD/MM/YYYY" [prefixIcon]="CalendarIcon"
+                        [formControl]="showcaseForm.controls.date">
+                    </app-input>
+                    <div class="value-display" style="margin-top: 12px; font-size: 0.75rem;">
+                        Value: {{ showcaseForm.controls.date.value }}
+                    </div>
+                </div>
+
+                <!-- Generic Mask (License Plate) -->
+                <div class="preview-card">
+                    <app-input label="License Plate" mask="00-A0 000.00" placeholder="59-F1 123.45"
+                        [formControl]="showcaseForm.controls.licensePlate">
+                    </app-input>
+                    <div class="value-display" style="margin-top: 12px; font-size: 0.75rem;">
+                        Value: {{ showcaseForm.controls.licensePlate.value }}
+                    </div>
+                </div>
+
+                <!-- Search -->
+                <div class="preview-card">
+                    <app-input class="search-input" placeholder="Search..." [prefixIcon]="SearchIcon" [clearable]="true"
+                        [formControl]="showcaseForm.controls.search">
+                    </app-input>
+                    <div style="margin-top: 0.5rem; font-size: 0.8rem; color: #64748b;">
+                        Input with custom rounded style
+                    </div>
+                    <div class="value-display" style="margin-top: 12px; font-size: 0.75rem;">
+                        Query: {{ showcaseForm.controls.search.value }}
+                    </div>
+                </div>
+
             </div>
         </div>
+        }
 
-        <!-- Utility Section -->
-        <div class="demo-section">
-            <div class="section-header">
-                <div class="section-icon">
-                    <i-lucide [img]="ShieldCheck" [size]="18"></i-lucide>
-                </div>
-                <h3>Security & Utilities</h3>
-            </div>
-
-            <div class="demo-grid">
-                <div class="card">
-                    <app-input label="Secure Password" type="password" formControlName="password"
-                        placeholder="Enter password..." [prefixIcon]="ShieldCheck">
-                    </app-input>
-                </div>
-            </div>
-
-            <h3 class="section-title">States & Actions</h3>
-            <div class="demo-grid">
-                <div class="card">
-                    <app-input label="Disabled Input" [disabled]="true" [prefixIcon]="Keyboard"
-                        placeholder="Cannot edit this">
-                    </app-input>
-                </div>
-                <div class="card">
-                    <app-input label="Readonly Input" [readonly]="true" [prefixIcon]="Keyboard"
-                        placeholder="You can read but not change">
-                    </app-input>
-                </div>
-                <div class="card">
-                    <app-input label="Clearable Input" [clearable]="true" formControlName="phone"
-                        placeholder="Type to see clear button" [prefixIcon]="Keyboard">
-                    </app-input>
-                </div>
-            </div>
+        @if (activeTab() === 'api') {
+        <div class="api-section">
+            <h2>Inputs</h2>
+            <table class="api-table">
+                <thead>
+                    <tr>
+                        <th>Property</th>
+                        <th>Type</th>
+                        <th>Default</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>label</td>
+                        <td class="type-cell">string</td>
+                        <td class="default-cell">''</td>
+                        <td>Top label.</td>
+                    </tr>
+                    <tr>
+                        <td>hint</td>
+                        <td class="type-cell">string</td>
+                        <td class="default-cell">''</td>
+                        <td>Hint text displayed below the input.</td>
+                    </tr>
+                    <tr>
+                        <td>placeholder</td>
+                        <td class="type-cell">string</td>
+                        <td class="default-cell">''</td>
+                        <td>Placeholder text.</td>
+                    </tr>
+                    <tr>
+                        <td>mask</td>
+                        <td class="type-cell">string | 'currency' | 'date'</td>
+                        <td class="default-cell">null</td>
+                        <td>Input mask pattern (e.g., '(000) 000-0000').</td>
+                    </tr>
+                    <tr>
+                        <td>prefixIcon</td>
+                        <td class="type-cell">LucideIcon</td>
+                        <td class="default-cell">null</td>
+                        <td>Icon on the left.</td>
+                    </tr>
+                    <tr>
+                        <td>suffixIcon</td>
+                        <td class="type-cell">LucideIcon</td>
+                        <td class="default-cell">null</td>
+                        <td>Icon on the right.</td>
+                    </tr>
+                    <tr>
+                        <td>errorText</td>
+                        <td class="type-cell">string</td>
+                        <td class="default-cell">''</td>
+                        <td>Error message used when invalid.</td>
+                    </tr>
+                    <tr>
+                        <td>clearable</td>
+                        <td class="type-cell">boolean</td>
+                        <td class="default-cell">false</td>
+                        <td>Show clear button when having value.</td>
+                    </tr>
+                    <tr>
+                        <td>disabled</td>
+                        <td class="type-cell">boolean</td>
+                        <td class="default-cell">false</td>
+                        <td>Disable the input.</td>
+                    </tr>
+                    <tr>
+                        <td>readonly</td>
+                        <td class="type-cell">boolean</td>
+                        <td class="default-cell">false</td>
+                        <td>Make input read-only.</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-    </form>
+        }
+    </div>
 </div>

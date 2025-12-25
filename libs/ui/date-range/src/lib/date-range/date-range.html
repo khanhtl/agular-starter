@@ -1,1 +1,72 @@
-<p>DateRange works!</p>
+<div class="date-range-container" #container>
+    @if (label()) {
+    <label class="date-range-label">{{ label() }}</label>
+    }
+
+    <div class="input-group" [class.focused]="isOpen()">
+        <div class="input-wrapper">
+            <input type="text" [formControl]="startControl" [placeholder]="startPlaceholder()" appDateInput="dd/MM/yyyy"
+                (focus)="isOpen.set(true)" class="date-input" />
+            <span class="separator">→</span>
+            <input type="text" [formControl]="endControl" [placeholder]="endPlaceholder()" appDateInput="dd/MM/yyyy"
+                (focus)="isOpen.set(true)" class="date-input" />
+        </div>
+
+        @if ((startDate() || endDate()) && !startControl.disabled) {
+        <button class="clear-btn" (click)="clearValue($event)" type="button">
+            <i-lucide [img]="XIcon" [size]="14"></i-lucide>
+        </button>
+        }
+
+        <button class="picker-btn" (click)="toggleCalendar($event)" type="button">
+            <i-lucide [img]="CalendarIcon" [size]="18"></i-lucide>
+        </button>
+    </div>
+
+    <!-- Dropdown -->
+    @if (isOpen()) {
+    <div class="range-dropdown">
+        <div class="range-header">
+            <button class="nav-btn prev" (click)="prevMonth()">
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                    <path fill="currentColor" d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                </svg>
+            </button>
+            <div class="current-months">
+                <span>{{ leftViewDate() | date:'MMMM yyyy' }}</span>
+                <span>{{ rightViewDate() | date:'MMMM yyyy' }}</span>
+            </div>
+            <button class="nav-btn next" (click)="nextMonth()">
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                    <path fill="currentColor" d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="calendars-wrapper" (mouseleave)="onHover(null)">
+            <app-calendar [viewDate]="leftViewDate()" [showHeader]="false" [showFooter]="false"
+                [rangeStart]="startDate()" [rangeEnd]="endDate()" [rangeHover]="hoverDate()"
+                (valueChange)="onDateSelect($event)" (cellHover)="onHover($event)">
+            </app-calendar>
+
+            <app-calendar [viewDate]="rightViewDate()" [showHeader]="false" [showFooter]="false"
+                [rangeStart]="startDate()" [rangeEnd]="endDate()" [rangeHover]="hoverDate()"
+                (valueChange)="onDateSelect($event)" (cellHover)="onHover($event)">
+            </app-calendar>
+        </div>
+
+        <div class="range-footer">
+            @if (startDate()) {
+            <div class="range-summary">
+                <span class="tag">{{ startDate() | date:'dd/MM/yyyy' }}</span>
+                @if (endDate()) {
+                <span class="range-arrow">→</span>
+                <span class="tag">{{ endDate() | date:'dd/MM/yyyy' }}</span>
+                }
+            </div>
+            }
+            <button class="apply-btn" (click)="isOpen.set(false)">Đóng</button>
+        </div>
+    </div>
+    }
+</div>

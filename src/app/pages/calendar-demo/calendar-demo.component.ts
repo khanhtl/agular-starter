@@ -1,96 +1,130 @@
-
-import { CalendarComponent, CalendarEvent, CalendarLocale } from '@angular-starter/calendar';
+import { CalendarComponent, CalendarEvent } from '@angular-starter/calendar';
+import { ButtonComponent } from '@angular-starter/ui/button';
 import { CommonModule } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component, computed, effect, ElementRef, OnDestroy, signal, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { html } from '@codemirror/lang-html';
+import { basicSetup, EditorView } from 'codemirror';
+import { Code, Eye, EyeOff, LucideAngularModule } from 'lucide-angular';
 
 @Component({
     selector: 'app-calendar-demo',
     standalone: true,
-    imports: [CommonModule, CalendarComponent],
-    template: `
-    <div class="demo-container">
-      <h1>Calendar Demo</h1>
-      
-      <div class="demo-flex">
-        <div class="demo-section">
-          <h3>Tiếng Việt (Mặc định)</h3>
-          <app-calendar [(value)]="selectedDate"></app-calendar>
-          <p class="selected-value">Ngày đã chọn: {{ selectedDate() | date:'dd/MM/yyyy' }}</p>
-        </div>
-
-        <div class="demo-section">
-          <h3>English Locale</h3>
-          <app-calendar [locale]="enLocale" [(value)]="selectedDate"></app-calendar>
-        </div>
-
-        <div class="demo-section">
-          <h3>Dữ liệu sự kiện (Events)</h3>
-          <app-calendar [events]="events" [(value)]="selectedDate"></app-calendar>
-          <div class="event-legend">
-            <span class="dot primary"></span> Meeting
-            <span class="dot danger"></span> Deadline
-            <span class="dot warning"></span> Birthday
-          </div>
-        </div>
-      </div>
-    </div>
-  `,
+    imports: [CommonModule, FormsModule, CalendarComponent, ButtonComponent, LucideAngularModule],
+    templateUrl: './calendar-demo.component.html',
     styles: [`
-    .demo-container {
-      padding: 24px;
+    .playground-grid {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 2rem;
+      align-items: start;
     }
-    .demo-flex {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 40px;
+    .controls-panel {
+      background: #f8fafc;
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      border: 1px solid #e2e8f0;
     }
-    .demo-section {
-      margin-bottom: 24px;
-      min-width: 280px;
+    .control-group {
+      margin-bottom: 1.25rem;
     }
-    .selected-value {
-      margin-top: 16px;
+    .control-group label {
+      display: block;
+      font-size: 0.875rem;
       font-weight: 600;
-      color: var(--c-brand);
+      color: #64748b;
+      margin-bottom: 0.5rem;
     }
-    .event-legend {
-        margin-top: 12px;
-        font-size: 0.85rem;
-        display: flex;
-        gap: 12px;
-        color: #666;
+    .control-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
     }
-    .dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        display: inline-block;
-    }
-    .dot.primary { background: var(--c-brand); }
-    .dot.danger { background: #ef4444; }
-    .dot.warning { background: #f59e0b; }
-    
-    h1 { margin-bottom: 32px; }
-    h3 { margin-bottom: 16px; font-size: 1.1rem; }
   `]
 })
-export class CalendarDemoComponent {
+export class CalendarDemoComponent implements OnDestroy {
+    readonly CodeIcon = Code;
+    readonly EyeIcon = Eye;
+    readonly EyeOffIcon = EyeOff;
+
+    activeTab = signal<'preview' | 'api'>('preview');
     selectedDate = signal<Date | null>(new Date());
 
-    enLocale: CalendarLocale = {
-        days: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-        months: [
-            'January', 'February', 'March', 'April', 'May', 'June',
-            'July', 'August', 'September', 'October', 'November', 'December'
-        ],
-        today: 'Today',
-        clear: 'Clear'
-    };
+    // CodeMirror
+    showCode = signal(false);
+    @ViewChild('codeEditor') codeEditorRef!: ElementRef<HTMLDivElement>;
+    editorView?: EditorView;
+
+    // Playground Config
+    config = signal({
+        showHeader: true,
+        showFooter: true,
+        showEvents: true
+    });
 
     events: CalendarEvent[] = [
         { date: new Date(), title: 'Today Meeting', color: 'var(--c-brand)' },
         { date: new Date(new Date().setDate(new Date().getDate() + 2)), title: 'Deadline', color: '#ef4444' },
         { date: new Date(new Date().setDate(new Date().getDate() - 3)), title: 'Birthday', color: '#f59e0b' },
-        { date: new Date(new Date().setDate(new Date().getDate() - 3)), title: 'Party', color: '#3b82f6' },
     ];
+
+    generatedCode = computed(() => {
+        const c = this.config();
+        const props = [
+            !c.showHeader ? '[showHeader]="false"' : '',
+            !c.showFooter ? '[showFooter]="false"' : '',
+            c.showEvents ? '[events]="events"' : '',
+            '[(value)]="selectedDate"'
+        ].filter(Boolean).join('\n  ');
+
+        return `<app-calendar\n  ${props}>\n</app-calendar>`;
+    });
+
+    constructor() {
+        effect(() => {
+            const code = this.generatedCode();
+            if (this.editorView) {
+                this.editorView.dispatch({
+                    changes: { from: 0, to: this.editorView.state.doc.length, insert: code }
+                });
+            }
+        });
+    }
+
+    updateConfig(key: string, value: any) {
+        this.config.update((c: any) => ({ ...c, [key]: value }));
+    }
+
+    toggleCode() {
+        this.showCode.update(v => !v);
+        if (this.showCode()) {
+            setTimeout(() => this.initEditor(), 50);
+        } else {
+            this.editorView?.destroy();
+            this.editorView = undefined;
+        }
+    }
+
+    initEditor() {
+        if (!this.codeEditorRef) return;
+        this.editorView = new EditorView({
+            doc: this.generatedCode(),
+            extensions: [
+                basicSetup,
+                html(),
+                EditorView.editable.of(false),
+                EditorView.theme({
+                    "&": { height: "auto", maxHeight: "300px", fontSize: "14px", backgroundColor: "#f8fafc" },
+                    ".cm-scroller": { overflow: "auto" },
+                    ".cm-gutters": { backgroundColor: "#f1f5f9", borderRight: "1px solid #e2e8f0" }
+                })
+            ],
+            parent: this.codeEditorRef.nativeElement
+        });
+    }
+
+    ngOnDestroy() {
+        this.editorView?.destroy();
+    }
 }

@@ -1,0 +1,68 @@
+
+> nx run angular-starter:lint
+
+Linting "angular-starter"...
+[0m[0m
+[0m[4mC:\Data\Learning\Angular\angular-starter\src\app\pages\button-demo\button-demo.component.html[24m[0m
+[0m  [2m61:25[22m  [31merror[39m  A label component must be associated with a form element  [2m@angular-eslint/template/label-has-associated-control[22m[0m
+[0m  [2m68:25[22m  [31merror[39m  A label component must be associated with a form element  [2m@angular-eslint/template/label-has-associated-control[22m[0m
+[0m  [2m82:25[22m  [31merror[39m  A label component must be associated with a form element  [2m@angular-eslint/template/label-has-associated-control[22m[0m
+[0m[0m
+[0m[4mC:\Data\Learning\Angular\angular-starter\src\app\pages\button-demo\button-demo.component.ts[24m[0m
+[0m  [2m111:36[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m112:28[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4mC:\Data\Learning\Angular\angular-starter\src\app\pages\calendar-demo\calendar-demo.component.ts[24m[0m
+[0m  [2m95:38[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m96:32[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4mC:\Data\Learning\Angular\angular-starter\src\app\pages\date-box-demo\date-box-demo.component.html[24m[0m
+[0m  [2m57:25[22m  [31merror[39m  A label component must be associated with a form element  [2m@angular-eslint/template/label-has-associated-control[22m[0m
+[0m  [2m64:25[22m  [31merror[39m  A label component must be associated with a form element  [2m@angular-eslint/template/label-has-associated-control[22m[0m
+[0m[0m
+[0m[4mC:\Data\Learning\Angular\angular-starter\src\app\pages\date-box-demo\date-box-demo.component.ts[24m[0m
+[0m  [2m84:36[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m85:28[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4mC:\Data\Learning\Angular\angular-starter\src\app\pages\date-range-demo\date-range-demo.component.html[24m[0m
+[0m  [2m59:25[22m  [31merror[39m  A label component must be associated with a form element  [2m@angular-eslint/template/label-has-associated-control[22m[0m
+[0m  [2m66:25[22m  [31merror[39m  A label component must be associated with a form element  [2m@angular-eslint/template/label-has-associated-control[22m[0m
+[0m  [2m74:25[22m  [31merror[39m  A label component must be associated with a form element  [2m@angular-eslint/template/label-has-associated-control[22m[0m
+[0m[0m
+[0m[4mC:\Data\Learning\Angular\angular-starter\src\app\pages\date-range-demo\date-range-demo.component.ts[24m[0m
+[0m  [2m96:36[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m97:28[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4mC:\Data\Learning\Angular\angular-starter\src\app\pages\grid-demo\grid-demo.component.html[24m[0m
+[0m  [2m71:25[22m  [31merror[39m  A label component must be associated with a form element  [2m@angular-eslint/template/label-has-associated-control[22m[0m
+[0m[0m
+[0m[4mC:\Data\Learning\Angular\angular-starter\src\app\pages\grid-demo\grid-demo.component.ts[24m[0m
+[0m   [2m81:34[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m174:38[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m175:32[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4mC:\Data\Learning\Angular\angular-starter\src\app\pages\input-demo\input-demo.component.html[24m[0m
+[0m   [2m35:30[22m  [31merror[39m  Use built-in control flow instead of directive ngIf       [2m@angular-eslint/template/prefer-control-flow[22m[0m
+[0m   [2m87:25[22m  [31merror[39m  A label component must be associated with a form element  [2m@angular-eslint/template/label-has-associated-control[22m[0m
+[0m   [2m94:25[22m  [31merror[39m  A label component must be associated with a form element  [2m@angular-eslint/template/label-has-associated-control[22m[0m
+[0m  [2m101:25[22m  [31merror[39m  A label component must be associated with a form element  [2m@angular-eslint/template/label-has-associated-control[22m[0m
+[0m  [2m108:25[22m  [31merror[39m  A label component must be associated with a form element  [2m@angular-eslint/template/label-has-associated-control[22m[0m
+[0m[0m
+[0m[4mC:\Data\Learning\Angular\angular-starter\src\app\pages\input-demo\input-demo.component.ts[24m[0m
+[0m  [2m102:36[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m103:28[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[31m[1m✖ 27 problems (14 errors, 13 warnings)[22m[39m[0m
+[0m[31m[1m[22m[39m[0m
+✖ 27 problems (14 errors, 13 warnings)
+
+
+
+ NX   Running target lint for project angular-starter failed
+
+Failed tasks:
+
+- angular-starter:lint
+
+Hint: run the command with --verbose for more details.
+

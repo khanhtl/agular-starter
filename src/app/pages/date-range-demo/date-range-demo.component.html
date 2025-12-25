@@ -1,0 +1,128 @@
+<div class="page-container">
+    <header class="page-header">
+        <h1>Date Range</h1>
+        <p>A specialized component for selecting a start and end date with a dual-calendar view.</p>
+    </header>
+
+    <nav class="tab-nav">
+        <button [class.active]="activeTab() === 'preview'" (click)="activeTab.set('preview')">Preview</button>
+        <button [class.active]="activeTab() === 'api'" (click)="activeTab.set('api')">API</button>
+    </nav>
+
+    <div class="tab-content">
+        @if (activeTab() === 'preview') {
+
+        <!-- Interactive Playground -->
+        <div class="demo-section">
+            <h2>Interactive Playground</h2>
+            <div class="playground-grid">
+                <div class="demo-card"
+                    style="min-height: 500px; display: flex; flex-direction: column; justify-content: center;">
+                    <div class="preview-area"
+                        style="border: none; background: transparent; max-width: 600px; margin: 0 auto; width: 100%;">
+                        <app-date-range [formControl]="rangeControl" [label]="config().label"
+                            [startPlaceholder]="config().startPlaceholder" [endPlaceholder]="config().endPlaceholder">
+                        </app-date-range>
+
+                        <div
+                            style="margin-top: 2rem; padding: 1rem; background: #f1f5f9; border-radius: 0.5rem; font-family: monospace; font-size: 0.875rem;">
+                            <strong>Control Value:</strong>
+                            {{ rangeControl.value?.[0] | date:'dd/MM/yyyy' }} - {{ rangeControl.value?.[1] |
+                            date:'dd/MM/yyyy' }}
+                        </div>
+                    </div>
+
+                    <div class="code-section" style="margin-top: 48px;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 0 16px;">
+                            <h3 style="margin: 0; font-size: 0.9rem; color: #64748b;">Generated Code</h3>
+                            <app-button variant="ghost" size="sm" (click)="toggleCode()">
+                                <i-lucide [img]="showCode() ? EyeOffIcon : CodeIcon" [style.marginRight.px]="8"
+                                    [size]="16"></i-lucide>
+                                {{ showCode() ? 'Hide Code' : 'Show Code' }}
+                            </app-button>
+                        </div>
+
+                        @if (showCode()) {
+                        <div #codeEditor class="code-editor-container"
+                            style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 0 16px;">
+                        </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Controls Panel -->
+                <div class="controls-panel">
+                    <h3 style="margin-top: 0; margin-bottom: 1rem; font-size: 1.1rem;">Properties</h3>
+
+                    <div class="control-group">
+                        <label>Label</label>
+                        <input type="text" class="app-input"
+                            style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px;"
+                            [ngModel]="config().label" (ngModelChange)="updateConfig('label', $event)">
+                    </div>
+
+                    <div class="control-group">
+                        <label>Start Placeholder</label>
+                        <input type="text" class="app-input"
+                            style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px;"
+                            [ngModel]="config().startPlaceholder"
+                            (ngModelChange)="updateConfig('startPlaceholder', $event)">
+                    </div>
+
+                    <div class="control-group">
+                        <label>End Placeholder</label>
+                        <input type="text" class="app-input"
+                            style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px;"
+                            [ngModel]="config().endPlaceholder"
+                            (ngModelChange)="updateConfig('endPlaceholder', $event)">
+                    </div>
+
+                    <div
+                        style="margin-top: 2rem; padding: 1rem; background: #fff; border-radius: 0.5rem; border: 1px dashed #cbd5e1;">
+                        <p style="margin:0; font-size: 0.8rem; color: #64748b; font-style: italic;">
+                            Dual-calendar layout provides a seamless experience for selecting start and end dates.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+
+        @if (activeTab() === 'api') {
+        <div class="api-section">
+            <h2>app-date-range</h2>
+            <table class="api-table">
+                <thead>
+                    <tr>
+                        <th>Property</th>
+                        <th>Type</th>
+                        <th>Default</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>label</td>
+                        <td class="type-cell">string</td>
+                        <td class="default-cell">''</td>
+                        <td>Main label for the component.</td>
+                    </tr>
+                    <tr>
+                        <td>startPlaceholder</td>
+                        <td class="type-cell">string</td>
+                        <td class="default-cell">'Từ ngày'</td>
+                        <td>Placeholder for start date input.</td>
+                    </tr>
+                    <tr>
+                        <td>endPlaceholder</td>
+                        <td class="type-cell">string</td>
+                        <td class="default-cell">'Đến ngày'</td>
+                        <td>Placeholder for end date input.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        }
+    </div>
+</div>

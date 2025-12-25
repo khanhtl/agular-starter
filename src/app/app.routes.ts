@@ -23,6 +23,14 @@ export const appRoutes: Route[] = [
         path: 'calendar',
         loadComponent: () => import('./pages/calendar-demo/calendar-demo.component').then(m => m.CalendarDemoComponent)
     },
+    {
+        path: 'date-box',
+        loadComponent: () => import('./pages/date-box-demo/date-box-demo.component').then(m => m.DateBoxDemoComponent)
+    },
+    {
+        path: 'date-range',
+        loadComponent: () => import('./pages/date-range-demo/date-range-demo.component').then(m => m.DateRangeDemoComponent)
+    },
 
     { path: '', redirectTo: 'button', pathMatch: 'full' },
 ];

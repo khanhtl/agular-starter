@@ -1,0 +1,117 @@
+
+:host {
+    display: inline-block;
+    width: 250px;
+    font-family: inherit;
+    --db-primary: var(--c-brand, #42b983);
+    --db-text: var(--c-text, #374151);
+    --db-bg: var(--c-white, #fff);
+    --db-border: var(--c-border, #e5e7eb);
+    --db-radius: var(--w-radius, 8px);
+}
+
+.date-box-container {
+    position: relative;
+    width: 100%;
+}
+
+.date-box-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--db-text);
+    margin-bottom: 6px;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    background: var(--db-bg);
+    border: 1px solid var(--db-border);
+    border-radius: var(--db-radius);
+    overflow: hidden;
+    transition: all 0.2s ease;
+}
+
+.input-group:hover {
+    border-color: var(--db-primary);
+}
+
+.input-group.focused {
+    border-color: var(--db-primary);
+    box-shadow: 0 0 0 3px rgba(66, 185, 131, 0.15);
+}
+
+.date-input,
+.date-input:focus {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 10px 12px;
+    font-size: 0.95rem;
+    color: var(--db-text);
+    outline: none !important;
+    box-shadow: none !important;
+    min-width: 0;
+}
+
+.picker-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px 10px;
+    color: #9cb2c9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+}
+
+.clear-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px 6px;
+    color: #d1d5db;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+}
+
+.clear-btn:hover {
+    color: #ef4444;
+}
+
+.picker-btn:hover {
+    color: var(--db-primary);
+}
+
+/* Dropdown */
+.calendar-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    z-index: 1000;
+    background: var(--db-bg);
+    border-radius: 12px;
+    transform-origin: top;
+    animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Dark mode overrides if needed */
+.dark .calendar-dropdown {
+    background: #1f2937;
+    border-color: #374151;
+}

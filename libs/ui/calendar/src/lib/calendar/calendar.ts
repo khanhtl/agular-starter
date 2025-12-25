@@ -7,6 +7,7 @@ import {
   HostListener,
   input,
   model,
+  output,
   signal
 } from '@angular/core';
 import { CalendarCell, CalendarEvent, CalendarLocale, CalendarViewType } from '../calendar.types';
@@ -33,6 +34,7 @@ const VI_LOCALE: CalendarLocale = {
     '[tabindex]': '0',
     'role': 'grid',
     '[attr.aria-label]': 'headerTitle()',
+    '(mouseleave)': 'cellHover.emit(null)'
   }
 })
 export class CalendarComponent {
@@ -48,14 +50,32 @@ export class CalendarComponent {
   /** Custom events to display on the calendar */
   events = input<CalendarEvent[]>([]);
 
+  /** Range start date for range selection mode */
+  rangeStart = input<Date | null>(null);
+
+  /** Range end date for range selection mode */
+  rangeEnd = input<Date | null>(null);
+
+  /** Currently hovered date for range selection preview */
+  rangeHover = input<Date | null>(null);
+
+  /** Emitted when a cell is hovered */
+  cellHover = output<Date | null>();
+
   /** Locale configuration for localization */
   locale = input<CalendarLocale>(VI_LOCALE);
 
   /** The current view type */
   viewType = signal<CalendarViewType>('month');
 
-  /** The date being used to determine which month/year is shown */
-  viewDate = signal<Date>(new Date());
+  /** The date being used to determine which month/year is shown (model for external sync) */
+  viewDate = model<Date>(new Date());
+
+  /** Whether to show the calendar header */
+  showHeader = input<boolean>(true);
+
+  /** Whether to show the calendar footer */
+  showFooter = input<boolean>(true);
 
   /** Names of the days of the week */
   weekDays = computed(() => this.locale().days);
@@ -65,58 +85,31 @@ export class CalendarComponent {
 
   /** Computed grid for the month view */
   monthGrid = computed(() => {
-    const days = CalendarUtil.generateMonthGrid(this.viewDate());
-    const selected = this.value();
-    const today = new Date();
-    const currentViewDate = this.viewDate();
-    const allEvents = this.events();
-
-    return days.map(date => ({
-      date,
-      label: date.getDate().toString(),
-      isCurrentMonth: CalendarUtil.isSameMonth(date, currentViewDate),
-      isToday: CalendarUtil.isSameDate(date, today),
-      isSelected: CalendarUtil.isSameDate(date, selected),
-      isOtherView: !CalendarUtil.isSameMonth(date, currentViewDate),
-      events: allEvents.filter(e => CalendarUtil.isSameDate(e.date, date))
-    } as CalendarCell));
+    return CalendarUtil.generateMonthGrid(
+      this.viewDate(),
+      this.value(),
+      this.rangeStart(),
+      this.rangeEnd(),
+      this.events(),
+      this.rangeHover()
+    );
   });
 
   /** Computed grid for the year view */
   yearGrid = computed(() => {
-    const currentYear = this.viewDate().getFullYear();
-    const selected = this.value();
-    const today = new Date();
-
-    return this.months().map((month, index) => {
-      const date = new Date(currentYear, index, 1);
-      return {
-        date,
-        label: month.substring(0, 3),
-        isSelected: selected ? (selected.getFullYear() === currentYear && selected.getMonth() === index) : false,
-        isToday: today.getFullYear() === currentYear && today.getMonth() === index,
-      } as CalendarCell;
-    });
+    return CalendarUtil.generateYearGrid(
+      this.viewDate(),
+      this.value(),
+      this.months()
+    );
   });
 
   /** Computed grid for the decade view (12 years) */
   decadeGrid = computed(() => {
-    const currentYear = this.viewDate().getFullYear();
-    const startYear = Math.floor(currentYear / 10) * 10 - 1;
-    const selected = this.value();
-    const today = new Date();
-
-    return Array.from({ length: 12 }, (_, i) => {
-      const year = startYear + i;
-      const date = new Date(year, 0, 1);
-      return {
-        date,
-        label: year.toString(),
-        isSelected: selected?.getFullYear() === year,
-        isToday: today.getFullYear() === year,
-        isOtherView: i === 0 || i === 11 // First and last are outside the decade
-      } as CalendarCell;
-    });
+    return CalendarUtil.generateDecadeGrid(
+      this.viewDate(),
+      this.value()
+    );
   });
 
   /** Header title based on current view */

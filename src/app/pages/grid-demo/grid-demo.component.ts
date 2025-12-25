@@ -1,62 +1,214 @@
 import { ButtonComponent } from '@angular-starter/ui/button';
 import { CellTemplateDirective, ColumnConfig, DataGridComponent } from '@angular-starter/ui/data-grid';
-import { Component, signal } from '@angular/core';
-import { LucideAngularModule, Pencil } from 'lucide-angular';
+import { CommonModule } from '@angular/common';
+import { Component, computed, effect, ElementRef, OnDestroy, signal, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { html } from '@codemirror/lang-html';
+import { basicSetup, EditorView } from 'codemirror';
+import { Code, Eye, EyeOff, LucideAngularModule, Pencil, Settings } from 'lucide-angular';
 
 @Component({
     selector: 'app-grid-demo',
     standalone: true,
-    imports: [DataGridComponent, CellTemplateDirective, ButtonComponent, LucideAngularModule],
+    imports: [CommonModule, FormsModule, DataGridComponent, CellTemplateDirective, ButtonComponent, LucideAngularModule],
     templateUrl: './grid-demo.component.html',
+    styles: [`
+    .playground-grid {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 2rem;
+      align-items: start;
+    }
+    .controls-panel {
+      background: #f8fafc;
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      border: 1px solid #e2e8f0;
+      position: sticky;
+      top: 2rem;
+    }
+    .control-group {
+      margin-bottom: 1.25rem;
+    }
+    .control-group label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #64748b;
+      margin-bottom: 0.5rem;
+    }
+    .control-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .status-badge {
+      padding: 4px 10px;
+      border-radius: 99px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      &.active { background: #ecfdf5; color: #059669; }
+      &.inactive { background: #fef2f2; color: #dc2626; }
+      &.pending { background: #fffbeb; color: #d97706; }
+      &.on-leave { background: #f3f4f6; color: #4b5563; }
+    }
+  `]
 })
-export class GridDemoComponent {
+export class GridDemoComponent implements OnDestroy {
     readonly Pencil = Pencil;
-    columns = signal<ColumnConfig[]>([
-        { key: 'id', title: 'ID', width: '100px', align: 'center', pinned: 'left', pinnable: true },
-        {
-            key: 'personal',
-            title: 'Personal Information',
-            align: 'center',
-            pinnable: true,
-            children: [
-                { key: 'name', title: 'Name', width: '150px' },
-                { key: 'email', title: 'Email', width: '200px' },
-                { key: 'phone', title: 'Phone', width: '150px' }
-            ]
-        },
-        {
-            key: 'work',
-            title: 'Work Details',
-            align: 'center',
-            pinnable: true,
-            children: [
-                { key: 'department', title: 'Department', width: '150px' },
-                { key: 'role', title: 'Role', width: '120px' },
-                { key: 'salary', title: 'Salary', width: '120px', align: 'right' }
-            ]
-        },
-        {
-            key: 'employment',
-            title: 'Employment',
-            align: 'center',
-            pinnable: true,
-            children: [
-                { key: 'startDate', title: 'Start Date', width: '120px' },
-                { key: 'location', title: 'Location', width: '150px' },
-                { key: 'manager', title: 'Manager', width: '150px' },
-                { key: 'projects', title: 'Projects', width: '100px', align: 'center' }
-            ]
-        },
-        { key: 'status', cellTemplate: 'cell-status', title: 'Status', width: '100px', align: 'center', pinned: 'right' },
-        { key: 'actions', title: 'Actions', width: '120px', align: 'center', pinned: 'right', pinnable: false }
-    ]);
+    readonly Settings = Settings;
+    readonly CodeIcon = Code;
+    readonly EyeIcon = Eye;
+    readonly EyeOffIcon = EyeOff;
+
+    activeTab = signal<'preview' | 'api'>('preview');
+
+    // CodeMirror
+    showCode = signal(false);
+    @ViewChild('codeEditor') codeEditorRef!: ElementRef<HTMLDivElement>;
+    editorView?: EditorView;
+
+    // Grid Config
+    config = signal({
+        height: '600px',
+        loading: false,
+        useNested: true,
+    });
+
+    // Base Data
+    data = signal<Record<string, any>[]>(this.generateSampleData());
+
+    // Columns Computed
+    columns = computed<ColumnConfig[]>(() => {
+        const c = this.config();
+
+        if (c.useNested) {
+            return [
+                { key: 'id', title: 'ID', width: '100px', align: 'center', pinned: 'left' as const, pinnable: true },
+                {
+                    key: 'personal',
+                    title: 'Personal Information',
+                    align: 'center',
+                    pinnable: true,
+                    children: [
+                        { key: 'name', title: 'Name', width: '150px' },
+                        { key: 'email', title: 'Email', width: '200px' },
+                        { key: 'phone', title: 'Phone', width: '250px' }
+                    ]
+                },
+                {
+                    key: 'work',
+                    title: 'Work Details',
+                    align: 'center',
+                    pinnable: true,
+                    children: [
+                        { key: 'department', title: 'Department', width: '150px' },
+                        { key: 'role', title: 'Role', width: '120px' },
+                        { key: 'salary', title: 'Salary', width: '120px', align: 'right' as const }
+                    ]
+                },
+                {
+                    key: 'employment',
+                    title: 'Employment',
+                    align: 'center',
+                    pinnable: true,
+                    children: [
+                        { key: 'startDate', title: 'Start Date', width: '120px' },
+                        { key: 'location', title: 'Location', width: '150px' },
+                        { key: 'manager', title: 'Manager', width: '150px' },
+                        { key: 'projects', title: 'Projects', width: '100px', align: 'center' as const }
+                    ]
+                },
+                { key: 'status', cellTemplate: 'cell-status', title: 'Status', width: '150px', align: 'center' as const, pinned: 'right' as const },
+                { key: 'actions', title: 'Actions', width: '120px', align: 'center' as const, pinned: 'right' as const, pinnable: false }
+            ];
+        }
+
+        // Flat version for variety
+        return [
+            { key: 'id', title: 'ID', width: '100px', align: 'center', pinned: 'left' as const },
+            { key: 'name', title: 'Name', width: '200px' },
+            { key: 'email', title: 'Email', width: '250px' },
+            { key: 'department', title: 'Department', width: '150px' },
+            { key: 'role', title: 'Role', width: '150px' },
+            { key: 'status', cellTemplate: 'cell-status', title: 'Status', width: '120px', align: 'center' as const, pinned: 'right' as const },
+            { key: 'actions', title: 'Actions', width: '120px', align: 'center' as const, pinned: 'right' as const, cellTemplate: 'cell-actions' }
+        ];
+    });
+
+    // Generated Code Computed
+    generatedCode = computed(() => {
+        const c = this.config();
+        return `<app-data-grid
+  [data]="data"
+  [columns]="columns"
+  [height]="'${c.height}'"
+  [loading]="${c.loading}">
+
+  <ng-template appCellTemplate="cell-status" let-value="value">
+    <span class="status-badge" [class]="value.toLowerCase().replace(' ', '-')">{{ value }}</span>
+  </ng-template>
+
+  <ng-template appCellTemplate="cell-actions">
+    <app-button variant="ghost" size="sm">
+       <i-lucide [img]="Pencil" [size]="14"></i-lucide>
+    </app-button>
+  </ng-template>
+
+</app-data-grid>`;
+    });
+
+    constructor() {
+        effect(() => {
+            const code = this.generatedCode();
+            if (this.editorView) {
+                this.editorView.dispatch({
+                    changes: { from: 0, to: this.editorView.state.doc.length, insert: code }
+                });
+            }
+        });
+    }
+
+    updateConfig(key: string, value: any) {
+        this.config.update((c: any) => ({ ...c, [key]: value }));
+    }
+
+    toggleCode() {
+        this.showCode.update(v => !v);
+        if (this.showCode()) {
+            setTimeout(() => this.initEditor(), 50);
+        } else {
+            this.editorView?.destroy();
+            this.editorView = undefined;
+        }
+    }
+
+    initEditor() {
+        if (!this.codeEditorRef) return;
+        this.editorView = new EditorView({
+            doc: this.generatedCode(),
+            extensions: [
+                basicSetup,
+                html(),
+                EditorView.editable.of(false),
+                EditorView.theme({
+                    "&": { height: "auto", maxHeight: "400px", fontSize: "14px", backgroundColor: "#f8fafc" },
+                    ".cm-scroller": { overflow: "auto" },
+                    ".cm-gutters": { backgroundColor: "#f1f5f9", borderRight: "1px solid #e2e8f0" }
+                })
+            ],
+            parent: this.codeEditorRef.nativeElement
+        });
+    }
 
     private generateSampleData() {
         const departments = ['Engineering', 'Design', 'Marketing', 'Sales', 'HR', 'Finance', 'Operations'];
         const roles = ['Developer', 'Designer', 'Manager', 'Tester', 'Analyst', 'Consultant', 'Specialist'];
         const statuses = ['Active', 'Inactive', 'Pending', 'On Leave'];
         const locations = ['New York', 'San Francisco', 'London', 'Tokyo', 'Berlin', 'Sydney', 'Toronto'];
-        const firstNames = ['John John John JohnJohnJohnJohnJohn', 'Jane', 'Bob', 'Alice', 'Charlie', 'Diana', 'Eve', 'Frank', 'Grace', 'Henry'];
+        const firstNames = ['John', 'Jane', 'Bob', 'Alice', 'Charlie', 'Diana', 'Eve', 'Frank', 'Grace', 'Henry'];
         const lastNames = ['Doe', 'Smith', 'Johnson', 'Brown', 'Wilson', 'Davis', 'Miller', 'Garcia', 'Rodriguez', 'Lee'];
 
         return Array.from({ length: 50 }, (_, i) => {
@@ -85,13 +237,14 @@ export class GridDemoComponent {
         });
     }
 
-    data = signal<Record<string, any>[]>(this.generateSampleData());
-    isLoading = signal<boolean>(false);
-
     toggleLoading() {
-        this.isLoading.set(true);
+        this.updateConfig('loading', true);
         setTimeout(() => {
-            this.isLoading.set(false);
+            this.updateConfig('loading', false);
         }, 2000);
+    }
+
+    ngOnDestroy() {
+        this.editorView?.destroy();
     }
 }

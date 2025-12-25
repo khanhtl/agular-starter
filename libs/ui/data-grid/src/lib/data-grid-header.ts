@@ -60,18 +60,35 @@ import { PinIconComponent } from './pin-icon';
         padding: 0 !important;
         background-clip: padding-box; /* Fixes border issues on sticky headers */
 
-        &.pinned-left {
-          .header-cell-content:last-child {
-          border-right: none;
-        }
-        }
+          &.pinned-left {
+            .header-cell-content {
+              border-left: 1px solid var(--c-border);
+              
+            }
+            &:first-child {
+                .header-cell-content {
+              border-left: none;
+              
+            }
+              }
+          }
+          &.pinned-right {
+            .header-cell-content {
+              border-right: 1px solid var(--c-border);
+            }
+            &:last-child {
+                .header-cell-content {
+              border-right: none;
+              
+            }
+              }
+          }
     }
     .header-cell-content {
         box-sizing: border-box;
         padding: 8px;
         display: flex;
         align-items: center;
-        border-right: 1px solid var(--c-border);
         border-bottom: 1px solid var(--c-border);
         
         &-parent {

@@ -135,8 +135,13 @@ export class AppMaskedInputDirective extends InputBaseDirective {
 
     private getRawValue(value: string): string {
         const pattern = this.mask();
-        if (pattern === 'currency' || pattern === 'date') {
+        if (pattern === 'currency') {
             return value.replace(/[^\d]/g, '');
+        }
+        // For dates, we usually want the formatted string (e.g. 24/12/2025) 
+        // rather than just the digits (24122025)
+        if (pattern === 'date' || pattern === '00/00/0000') {
+            return value;
         }
 
         let raw = '';

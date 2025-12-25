@@ -24,6 +24,9 @@ export interface CalendarCell {
     isDisabled?: boolean;
     isOtherView?: boolean;
     events?: CalendarEvent[];
+    isInRange?: boolean;
+    isRangeStart?: boolean;
+    isRangeEnd?: boolean;
 }
 
 export interface CalendarState {
