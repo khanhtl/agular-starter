@@ -108,29 +108,30 @@
 
   // Sizes
   .size-sm {
-    height: 32px;
+    height: var(--h-sm, 32px);
     font-size: 0.875rem;
     padding: 0 var(--w-space-sm, 12px);
   }
 
   .size-md {
-    height: 40px;
+    height: var(--h-md, 40px);
     font-size: 1rem;
     padding: 0 var(--w-space, 16px);
   }
 
   .size-lg {
-    height: 48px;
+    height: var(--h-lg, 48px);
     font-size: 1.125rem;
     padding: 0 var(--w-space-lg, 24px);
   }
 
   .size-icon {
-    height: 40px;
-    width: 40px;
+    height: var(--h-md, 40px);
+    width: var(--h-md, 40px);
     padding: 0;
     border-radius: 50% !important;
   }
+
 
   // States
   .is-disabled {

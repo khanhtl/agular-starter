@@ -31,7 +31,21 @@
     border-radius: var(--db-radius);
     overflow: hidden;
     transition: all 0.2s ease;
+    box-sizing: border-box;
 }
+
+.input-group.size-sm {
+    height: var(--h-sm, 28px);
+}
+
+.input-group.size-md {
+    height: var(--h-md, 36px);
+}
+
+.input-group.size-lg {
+    height: var(--h-lg, 44px);
+}
+
 
 .input-group:hover {
     border-color: var(--db-primary);
@@ -47,13 +61,26 @@
     flex: 1;
     border: none;
     background: transparent;
-    padding: 10px 12px;
-    font-size: 0.95rem;
+    padding: 0 12px;
+    height: 100%;
     color: var(--db-text);
     outline: none !important;
     box-shadow: none !important;
     min-width: 0;
 }
+
+.date-input.size-sm {
+    font-size: 0.8rem;
+}
+
+.date-input.size-md {
+    font-size: 0.95rem;
+}
+
+.date-input.size-lg {
+    font-size: 1.05rem;
+}
+
 
 .picker-btn {
     background: transparent;

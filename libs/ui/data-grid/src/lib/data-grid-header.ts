@@ -196,10 +196,11 @@ export class DataGridHeaderComponent {
 
   getHeaderHeight(column: ColumnConfig): string {
     if (column.children?.length || column.parentKey) {
-      return '36px';
+      return 'var(--h-md, 36px)';
     }
-    return (36 * this.maxHeaderDepth()) + 'px';
+    return `calc(var(--h-md, 36px) * ${this.maxHeaderDepth()})`;
   }
+
 
   getPinState(column: ColumnConfig): 'none' | 'left' | 'right' {
     if (column.pinned === 'left') return 'left';

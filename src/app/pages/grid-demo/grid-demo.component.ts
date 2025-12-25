@@ -101,55 +101,55 @@ export class GridDemoComponent implements OnDestroy {
 
         if (c.useNested) {
             return [
-                { key: 'id', title: 'ID', width: '100px', align: 'center', pinned: 'left' as const, pinnable: true },
+                { key: 'id', title: 'Mã số', width: '100px', align: 'center', pinned: 'left' as const, pinnable: true },
                 {
                     key: 'personal',
-                    title: 'Personal Information',
+                    title: 'Thông tin cá nhân',
                     align: 'center',
                     pinnable: true,
                     children: [
-                        { key: 'name', title: 'Name', width: '150px' },
+                        { key: 'name', title: 'Họ và tên', width: '150px' },
                         { key: 'email', title: 'Email', width: '200px' },
-                        { key: 'phone', title: 'Phone', width: '250px' }
+                        { key: 'phone', title: 'Điện thoại', width: '250px' }
                     ]
                 },
                 {
                     key: 'work',
-                    title: 'Work Details',
+                    title: 'Chi tiết công việc',
                     align: 'center',
                     pinnable: true,
                     children: [
-                        { key: 'department', title: 'Department', width: '150px' },
-                        { key: 'role', title: 'Role', width: '120px' },
-                        { key: 'salary', title: 'Salary', width: '120px', align: 'right' as const }
+                        { key: 'department', title: 'Phòng ban', width: '150px' },
+                        { key: 'role', title: 'Chức vụ', width: '120px' },
+                        { key: 'salary', title: 'Lương', width: '120px', align: 'right' as const }
                     ]
                 },
                 {
                     key: 'employment',
-                    title: 'Employment',
+                    title: 'Thông tin tuyển dụng',
                     align: 'center',
                     pinnable: true,
                     children: [
-                        { key: 'startDate', title: 'Start Date', width: '120px' },
-                        { key: 'location', title: 'Location', width: '150px' },
-                        { key: 'manager', title: 'Manager', width: '150px' },
-                        { key: 'projects', title: 'Projects', width: '100px', align: 'center' as const }
+                        { key: 'startDate', title: 'Ngày bắt đầu', width: '120px' },
+                        { key: 'location', title: 'Vị trí', width: '150px' },
+                        { key: 'manager', title: 'Người quản lý', width: '150px' },
+                        { key: 'projects', title: 'Dự án', width: '100px', align: 'center' as const }
                     ]
                 },
-                { key: 'status', cellTemplate: 'cell-status', title: 'Status', width: '150px', align: 'center' as const, pinned: 'right' as const },
-                { key: 'actions', title: 'Actions', width: '120px', align: 'center' as const, pinned: 'right' as const, pinnable: false }
+                { key: 'status', cellTemplate: 'cell-status', title: 'Trạng thái', width: '150px', align: 'center' as const, pinned: 'right' as const },
+                { key: 'actions', title: 'Hành động', width: '120px', align: 'center' as const, pinned: 'right' as const, pinnable: false }
             ];
         }
 
         // Flat version for variety
         return [
-            { key: 'id', title: 'ID', width: '100px', align: 'center', pinned: 'left' as const },
-            { key: 'name', title: 'Name', width: '200px' },
+            { key: 'id', title: 'Mã số', width: '100px', align: 'center', pinned: 'left' as const },
+            { key: 'name', title: 'Họ và tên', width: '200px' },
             { key: 'email', title: 'Email', width: '250px' },
-            { key: 'department', title: 'Department', width: '150px' },
-            { key: 'role', title: 'Role', width: '150px' },
-            { key: 'status', cellTemplate: 'cell-status', title: 'Status', width: '120px', align: 'center' as const, pinned: 'right' as const },
-            { key: 'actions', title: 'Actions', width: '120px', align: 'center' as const, pinned: 'right' as const, cellTemplate: 'cell-actions' }
+            { key: 'department', title: 'Phòng ban', width: '150px' },
+            { key: 'role', title: 'Chức vụ', width: '150px' },
+            { key: 'status', cellTemplate: 'cell-status', title: 'Trạng thái', width: '120px', align: 'center' as const, pinned: 'right' as const },
+            { key: 'actions', title: 'Hành động', width: '120px', align: 'center' as const, pinned: 'right' as const, cellTemplate: 'cell-actions' }
         ];
     });
 
@@ -219,12 +219,12 @@ export class GridDemoComponent implements OnDestroy {
     }
 
     private generateSampleData() {
-        const departments = ['Engineering', 'Design', 'Marketing', 'Sales', 'HR', 'Finance', 'Operations'];
-        const roles = ['Developer', 'Designer', 'Manager', 'Tester', 'Analyst', 'Consultant', 'Specialist'];
-        const statuses = ['Active', 'Inactive', 'Pending', 'On Leave'];
-        const locations = ['New York', 'San Francisco', 'London', 'Tokyo', 'Berlin', 'Sydney', 'Toronto'];
-        const firstNames = ['John', 'Jane', 'Bob', 'Alice', 'Charlie', 'Diana', 'Eve', 'Frank', 'Grace', 'Henry'];
-        const lastNames = ['Doe', 'Smith', 'Johnson', 'Brown', 'Wilson', 'Davis', 'Miller', 'Garcia', 'Rodriguez', 'Lee'];
+        const departments = ['Kỹ thuật', 'Thiết kế', 'Marketing', 'Bán hàng', 'Nhân sự', 'Tài chính', 'Vận hành'];
+        const roles = ['Lập trình viên', 'Thiết kế', 'Quản lý', 'Kiểm thử', 'Phân tích', 'Tư vấn', 'Chuyên gia'];
+        const statuses = ['Đang làm việc', 'Đã nghỉ', 'Chờ duyệt', 'Nghỉ phép'];
+        const locations = ['Hà Nội', 'TP. Hồ Chí Minh', 'Đà Nẵng', 'Hải Phòng', 'Cần Thơ'];
+        const firstNames = ['Nguyễn', 'Trần', 'Lê', 'Phạm', 'Hoàng', 'Huỳnh', 'Phan', 'Vũ', 'Võ', 'Đặng'];
+        const lastNames = ['Anh', 'Bình', 'Chi', 'Dũng', 'Em', 'Giang', 'Hương', 'Inh', 'Khánh', 'Linh'];
 
         return Array.from({ length: 50 }, (_, i) => {
             const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];

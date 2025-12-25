@@ -37,7 +37,7 @@ import { ColumnConfig } from './data-grid.types';
         overflow: hidden;
         text-overflow: ellipsis;
         position: relative;
-        height: 36px;
+        height: var(--h-md, 36px);
         box-sizing: border-box;
 
         &.pinned-left {

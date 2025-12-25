@@ -55,7 +55,7 @@ export class DateBoxDemoComponent implements OnDestroy {
 
   // Playground Config
   config = signal({
-    label: 'Select Date',
+    label: 'Chọn ngày',
     placeholder: 'dd/mm/yyyy'
   });
 

@@ -46,6 +46,10 @@ export class DateBoxComponent implements ControlValueAccessor {
   /** Label for the date box */
   label = input<string>('');
 
+  /** Size of the input */
+  size = input<'sm' | 'md' | 'lg'>('md');
+
+
   /** Placeholder for the input */
   placeholder = input<string>('dd/mm/yyyy');
 

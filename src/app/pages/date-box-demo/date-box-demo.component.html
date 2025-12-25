@@ -1,12 +1,12 @@
 <div class="page-container">
     <header class="page-header">
-        <h1>Date Box</h1>
-        <p>A composite component combining a masked input with a calendar dropdown.</p>
+        <h1>Ô nhập ngày (Date Box)</h1>
+        <p>Thành phần kết hợp giữa ô nhập liệu có mặt nạ (mask) và lịch lựa chọn.</p>
     </header>
 
     <nav class="tab-nav">
-        <button [class.active]="activeTab() === 'preview'" (click)="activeTab.set('preview')">Preview</button>
-        <button [class.active]="activeTab() === 'api'" (click)="activeTab.set('api')">API</button>
+        <button [class.active]="activeTab() === 'preview'" (click)="activeTab.set('preview')">Xem trước</button>
+        <button [class.active]="activeTab() === 'api'" (click)="activeTab.set('api')">Tài liệu API</button>
     </nav>
 
     <div class="tab-content">
@@ -14,7 +14,7 @@
 
         <!-- Interactive Playground -->
         <div class="demo-section">
-            <h2>Interactive Playground</h2>
+            <h2>Khu vực thử nghiệm (Playground)</h2>
             <div class="playground-grid">
                 <div class="demo-card"
                     style="min-height: 400px; display: flex; flex-direction: column; justify-content: center;">
@@ -26,18 +26,18 @@
 
                         <div
                             style="margin-top: 2rem; padding: 1rem; background: #f1f5f9; border-radius: 0.5rem; font-family: monospace; font-size: 0.875rem;">
-                            <strong>Control Value:</strong> {{ dateControl.value | date:'dd/MM/yyyy' }}
+                            <strong>Giá trị hiện tại:</strong> {{ dateControl.value | date:'dd/MM/yyyy' }}
                         </div>
                     </div>
 
                     <div class="code-section" style="margin-top: 48px;">
                         <div
                             style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 0 16px;">
-                            <h3 style="margin: 0; font-size: 0.9rem; color: #64748b;">Generated Code</h3>
+                            <h3 style="margin: 0; font-size: 0.9rem; color: #64748b;">Mã nguồn mẫu</h3>
                             <app-button variant="ghost" size="sm" (click)="toggleCode()">
                                 <i-lucide [img]="showCode() ? EyeOffIcon : CodeIcon" [style.marginRight.px]="8"
                                     [size]="16"></i-lucide>
-                                {{ showCode() ? 'Hide Code' : 'Show Code' }}
+                                {{ showCode() ? 'Ẩn mã nguồn' : 'Xem mã nguồn' }}
                             </app-button>
                         </div>
 
@@ -51,17 +51,17 @@
 
                 <!-- Controls Panel -->
                 <div class="controls-panel">
-                    <h3 style="margin-top: 0; margin-bottom: 1rem; font-size: 1.1rem;">Properties</h3>
+                    <h3 style="margin-top: 0; margin-bottom: 1rem; font-size: 1.1rem;">Thuộc tính</h3>
 
                     <div class="control-group">
-                        <label>Label</label>
+                        <label>Nhãn (Label)</label>
                         <input type="text" class="app-input"
                             style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px;"
                             [ngModel]="config().label" (ngModelChange)="updateConfig('label', $event)">
                     </div>
 
                     <div class="control-group">
-                        <label>Placeholder</label>
+                        <label>Gợi ý (Placeholder)</label>
                         <input type="text" class="app-input"
                             style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px;"
                             [ngModel]="config().placeholder" (ngModelChange)="updateConfig('placeholder', $event)">
@@ -70,7 +70,7 @@
                     <div
                         style="margin-top: 2rem; padding: 1rem; background: #fff; border-radius: 0.5rem; border: 1px dashed #cbd5e1;">
                         <p style="margin:0; font-size: 0.8rem; color: #64748b; font-style: italic;">
-                            Input is automatically formatted with a date mask.
+                            Ô nhập liệu được tự động định dạng theo mặt nạ ngày tháng.
                         </p>
                     </div>
                 </div>
@@ -84,10 +84,10 @@
             <table class="api-table">
                 <thead>
                     <tr>
-                        <th>Property</th>
-                        <th>Type</th>
-                        <th>Default</th>
-                        <th>Description</th>
+                        <th>Thuộc tính</th>
+                        <th>Kiểu dữ liệu</th>
+                        <th>Mặc định</th>
+                        <th>Mô tả</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -95,13 +95,13 @@
                         <td>label</td>
                         <td class="type-cell">string</td>
                         <td class="default-cell">''</td>
-                        <td>Input label.</td>
+                        <td>Nhãn hiển thị phía trên ô nhập.</td>
                     </tr>
                     <tr>
                         <td>placeholder</td>
                         <td class="type-cell">string</td>
                         <td class="default-cell">'dd/mm/yyyy'</td>
-                        <td>Input placeholder.</td>
+                        <td>Gợi ý hiển thị trong ô nhập.</td>
                     </tr>
                 </tbody>
             </table>

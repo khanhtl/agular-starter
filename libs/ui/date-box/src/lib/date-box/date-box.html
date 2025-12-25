@@ -3,9 +3,10 @@
     <label class="date-box-label">{{ label() }}</label>
     }
 
-    <div class="input-group" [class.focused]="isOpen()">
+    <div class="input-group" [class.focused]="isOpen()" [class]="'size-' + size()">
         <input type="text" [formControl]="inputControl" [placeholder]="placeholder()" appDateInput="dd/MM/yyyy"
-            (blur)="onInputBlur()" (focus)="isOpen.set(true)" class="date-input" />
+            (blur)="onInputBlur()" (focus)="isOpen.set(true)" class="date-input" [class]="'size-' + size()" />
+
 
         @if (dateValue() && !inputControl.disabled) {
         <button class="clear-btn" (click)="onDateSelect(null); $event.stopPropagation()" type="button">

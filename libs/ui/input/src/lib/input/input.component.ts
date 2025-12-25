@@ -64,27 +64,32 @@ import { AppPasswordInputDirective } from './password-input.directive';
       <input [id]="id" [type]="computedType" [formControl]="control" 
              [appMaskedInput]="mask" [placeholder]="placeholder" (blur)="onBlur()" 
              [disabled]="disabled" [readonly]="readonly"
-             class="app-input" [class.with-prefix]="prefixIcon" [class.with-suffix]="hasSuffix" />
+             class="app-input" [class]="'size-' + size"
+             [class.with-prefix]="prefixIcon" [class.with-suffix]="hasSuffix" />
     } @else if (format) {
       <input [id]="id" [type]="computedType" [formControl]="control" 
              [appFormattedInput]="format" [placeholder]="placeholder" (blur)="onBlur()" 
              [disabled]="disabled" [readonly]="readonly"
-             class="app-input" [class.with-prefix]="prefixIcon" [class.with-suffix]="hasSuffix" />
+             class="app-input" [class]="'size-' + size"
+             [class.with-prefix]="prefixIcon" [class.with-suffix]="hasSuffix" />
     } @else if (datePattern) {
       <input [id]="id" [type]="computedType" [formControl]="control" 
              [appDateInput]="datePattern" [placeholder]="placeholder" (blur)="onBlur()" 
              [disabled]="disabled" [readonly]="readonly"
-             class="app-input" [class.with-prefix]="prefixIcon" [class.with-suffix]="hasSuffix" />
+             class="app-input" [class]="'size-' + size"
+             [class.with-prefix]="prefixIcon" [class.with-suffix]="hasSuffix" />
     } @else if (type === 'password') {
       <input [id]="id" [type]="computedType" [formControl]="control" 
              appPasswordInput [placeholder]="placeholder" (blur)="onBlur()" 
              [disabled]="disabled" [readonly]="readonly"
-             class="app-input" [class.with-prefix]="prefixIcon" [class.with-suffix]="hasSuffix" />
+             class="app-input" [class]="'size-' + size"
+             [class.with-prefix]="prefixIcon" [class.with-suffix]="hasSuffix" />
     } @else {
       <input [id]="id" [type]="computedType" [formControl]="control" 
              appInput [placeholder]="placeholder" (blur)="onBlur()" 
              [disabled]="disabled" [readonly]="readonly"
-             class="app-input" [class.with-prefix]="prefixIcon" [class.with-suffix]="hasSuffix" />
+             class="app-input" [class]="'size-' + size"
+             [class.with-prefix]="prefixIcon" [class.with-suffix]="hasSuffix" />
     }
 
     <div class="input-actions">
@@ -139,6 +144,8 @@ export class AppInputComponent implements ControlValueAccessor {
   }
   @Input({ transform: booleanAttribute }) readonly: boolean = false;
   @Input({ transform: booleanAttribute }) clearable: boolean = false;
+  @Input() size: 'sm' | 'md' | 'lg' = 'md';
+
 
   @Input() prefixIcon: any;
   @Input() suffixIcon: any;

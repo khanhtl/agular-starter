@@ -88,14 +88,14 @@ export class InputDemoComponent implements OnDestroy {
 
   // Playground Config
   config = signal({
-    label: 'Playground Input',
-    placeholder: 'Type something...',
-    hint: 'This is a hint text',
+    label: 'Ô nhập liệu thử nghiệm',
+    placeholder: 'Nhập nội dung...',
+    hint: 'Đây là văn bản gợi ý',
     disabled: false,
     readonly: false,
     required: false,
     clearable: true,
-    errorText: 'This field is invalid',
+    errorText: 'Trường này không hợp lệ',
     type: 'text'
   });
 

@@ -1,7 +1,7 @@
 .app-input {
   display: block;
   width: 100%;
-  padding: 0.625rem 0.875rem;
+  padding: 0 0.875rem;
   font-size: 0.875rem;
   line-height: 1.25rem;
   color: var(--c-text-primary, #111827);
@@ -12,6 +12,22 @@
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   outline: none;
   box-sizing: border-box;
+
+  &.size-sm {
+    height: var(--h-sm, 2rem);
+    font-size: 0.75rem;
+  }
+
+  &.size-md {
+    height: var(--h-md, 2.5rem);
+    font-size: 0.875rem;
+  }
+
+  &.size-lg {
+    height: var(--h-lg, 3rem);
+    font-size: 1rem;
+  }
+
 
   &::placeholder {
     color: var(--c-text-placeholder, #9ca3af);
@@ -43,6 +59,7 @@
 
   &.ng-invalid.ng-touched {
     border-color: var(--c-danger, #ef4444);
+
     &:focus {
       box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
     }
@@ -106,6 +123,7 @@
   padding: 0.25rem;
   border-radius: 4px;
   display: flex;
+
   &:hover {
     background: var(--c-bg-secondary, #f3f4f6);
     color: var(--c-text-primary, #111827);
@@ -119,7 +137,8 @@
   color: var(--c-text-secondary, #6b7280);
 }
 
-.app-input-hint, .app-input-error {
+.app-input-hint,
+.app-input-error {
   font-size: 0.75rem;
   margin: 0;
 }
